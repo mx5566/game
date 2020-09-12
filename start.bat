@@ -1,0 +1,1 @@
+goworld.exe start examples/test_game

@@ -1,0 +1,8 @@
+syntax = "proto3";
+option go_package='goworld.proto';
+
+message Person {
+    string Name = 1;
+    int32 Age = 2;
+    string From = 3;
+}
