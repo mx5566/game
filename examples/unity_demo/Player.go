@@ -7,9 +7,10 @@ import (
 	"github.com/xiaonanln/goworld/engine/consts"
 	"github.com/xiaonanln/goworld/engine/entity"
 	"github.com/xiaonanln/goworld/engine/gwlog"
+	"github.com/xiaonanln/goworld/proto"
 	"strconv"
 	pproto "github.com/golang/protobuf/proto"
-	"github.com/xiaonanln/goworld/proto"
+
 )
 
 // Player 对象代表一名玩家
@@ -150,6 +151,7 @@ func (a *Player) ShootHit_Client(victimID common.EntityID) {
 		return
 	}
 
+	gwlog.Infof("Shoot %s, monster hp %d", victimID, victim.Attrs.GetInt("hp"))
 	monster := victim.I.(*Monster)
 	monster.TakeDamage(50)
 }

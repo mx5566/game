@@ -1,3 +1,3 @@
-goworld.exe kill examples/test_game
+goworld.exe kill examples/unity_demo
 
 pause

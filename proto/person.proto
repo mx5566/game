@@ -1,8 +1,13 @@
 syntax = "proto3";
-option go_package='goworld.proto';
+option go_package='proto';
 
 message Person {
     string Name = 1;
     int32 Age = 2;
     string From = 3;
+}
+
+message RegisterAccountReq {
+	string UserName = 1;
+	string Password = 2;
 }

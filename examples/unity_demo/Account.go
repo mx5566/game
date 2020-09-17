@@ -1,10 +1,13 @@
 package main
 
 import (
+	"fmt"
 	"github.com/xiaonanln/goworld"
 	"github.com/xiaonanln/goworld/engine/common"
 	"github.com/xiaonanln/goworld/engine/entity"
 	"github.com/xiaonanln/goworld/engine/gwlog"
+	"github.com/xiaonanln/goworld/proto"
+	pproto "github.com/golang/protobuf/proto"
 )
 
 // Account 是账号对象类型，用于处理注册、登录逻辑
@@ -17,7 +20,18 @@ func (a *Account) DescribeEntityType(desc *entity.EntityTypeDesc) {
 }
 
 // Register_Client 是处理玩家注册请求的RPC函数
-func (a *Account) Register_Client(username string, password string) {
+func (a *Account) Register_Client(registerParam  []byte) {
+	// 反序列化
+	person := proto.RegisterAccountReq{}
+	err := pproto.Unmarshal(registerParam, &person)
+	if err != nil {
+		fmt.Println("proto.Unmarshal.Err: ", err)
+		return
+	}
+
+	username := person.GetUserName()
+	password := person.GetPassword()
+
 	gwlog.Debugf("Register %s %s", username, password)
 	goworld.GetOrPutKVDB("password$"+username, password, func(oldVal string, err error) {
 		if err != nil {
@@ -39,6 +53,30 @@ func (a *Account) Register_Client(username string, password string) {
 		}
 	})
 }
+
+// Register_Client 是处理玩家注册请求的RPC函数
+/*func (a *Account) Register_Client(username string, password string) {
+	gwlog.Debugf("Register %s %s", username, password)
+	goworld.GetOrPutKVDB("password$"+username, password, func(oldVal string, err error) {
+		if err != nil {
+			a.CallClient("ShowError", "Server Error： "+err.Error()) // 服务器错误
+			return
+		}
+
+		if oldVal == "" {
+
+			player := goworld.CreateEntityLocally("Player") // 创建一个Player对象然后立刻销毁，产生一次存盘
+			player.Attrs.SetStr("name", username)
+			player.Destroy()
+
+			goworld.PutKVDB("playerID$"+username, string(player.ID), func(err error) {
+				a.CallClient("ShowInfo", "Registered Successfully, please click login.") // 注册成功，请点击登录
+			})
+		} else {
+			a.CallClient("ShowError", "Sorry, this account aready exists.") // 抱歉，这个账号已经存在
+		}
+	})
+}*/
 
 // Login_Client 是处理玩家登录请求的RPC函数
 func (a *Account) Login_Client(username string, password string) {

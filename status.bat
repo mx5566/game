@@ -1,3 +1,3 @@
-goworld.exe status examples/test_game
+goworld.exe status examples/unity_demo
 
 pause
