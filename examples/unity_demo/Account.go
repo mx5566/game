@@ -32,7 +32,7 @@ func (a *Account) Register_Client(registerParam  []byte) {
 	username := person.GetUserName()
 	password := person.GetPassword()
 
-	gwlog.Debugf("Register %s %s", username, password)
+	gwlog.Debugf("Register proto parse %s %s", username, password)
 	goworld.GetOrPutKVDB("password$"+username, password, func(oldVal string, err error) {
 		if err != nil {
 			a.CallClient("ShowError", "Server Error： "+err.Error()) // 服务器错误
@@ -40,16 +40,18 @@ func (a *Account) Register_Client(registerParam  []byte) {
 		}
 
 		if oldVal == "" {
-
 			player := goworld.CreateEntityLocally("Player") // 创建一个Player对象然后立刻销毁，产生一次存盘
 			player.Attrs.SetStr("name", username)
 			player.Destroy()
 
 			goworld.PutKVDB("playerID$"+username, string(player.ID), func(err error) {
-				a.CallClient("ShowInfo", "Registered Successfully, please click login.") // 注册成功，请点击登录
+				//a.CallClient("ShowInfo", "Registered Successfully, please click login.") // 注册成功，请点击登录
+				a.CallClient("ShowProtoTest", registerParam) // 注册成功，请点击登录
 			})
 		} else {
-			a.CallClient("ShowError", "Sorry, this account aready exists.") // 抱歉，这个账号已经存在
+			//a.CallClient("ShowError", "Sorry, this account aready exists.") // 抱歉，这个账号已经存在
+			a.CallClient("ShowProtoTest", registerParam) // 抱歉，这个账号已经存在
+
 		}
 	})
 }
