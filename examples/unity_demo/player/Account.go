@@ -1,13 +1,13 @@
-package main
+package player
 
 import (
 	"fmt"
+	pproto "github.com/golang/protobuf/proto"
 	"github.com/xiaonanln/goworld"
 	"github.com/xiaonanln/goworld/engine/common"
 	"github.com/xiaonanln/goworld/engine/entity"
 	"github.com/xiaonanln/goworld/engine/gwlog"
 	"github.com/xiaonanln/goworld/proto"
-	pproto "github.com/golang/protobuf/proto"
 )
 
 // Account 是账号对象类型，用于处理注册、登录逻辑
@@ -20,7 +20,7 @@ func (a *Account) DescribeEntityType(desc *entity.EntityTypeDesc) {
 }
 
 // Register_Client 是处理玩家注册请求的RPC函数
-func (a *Account) Register_Client(registerParam  []byte) {
+func (a *Account) Register_Client(registerParam []byte) {
 	// 反序列化
 	person := proto.RegisterAccountReq{}
 	err := pproto.Unmarshal(registerParam, &person)

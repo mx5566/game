@@ -1,6 +1,7 @@
-package main
+package player
 
 import (
+	"github.com/xiaonanln/goworld/examples/unity_demo/common"
 	"strconv"
 	"time"
 
@@ -127,7 +128,7 @@ func checkServerStarted() {
 }
 
 func isAllServicesReady() bool {
-	for _, serviceName := range _SERVICE_NAMES {
+	for _, serviceName := range common.SERVICE_NAMES {
 		if !goworld.CheckServiceEntitiesReady(serviceName) {
 			gwlog.Infof("%s entities are not ready ...", serviceName)
 			return false

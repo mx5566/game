@@ -1,6 +1,8 @@
-package main
+package npc
 
 import (
+	"github.com/xiaonanln/goworld/examples/unity_demo/bev"
+	"github.com/xiaonanln/goworld/examples/unity_demo/player"
 	"time"
 
 	"github.com/xiaonanln/goworld/engine/entity"
@@ -16,6 +18,8 @@ type Monster struct {
 
 	attackCD       time.Duration
 	lastAttackTime time.Time
+
+	ai bev.IMonsterBehavior
 }
 
 func (monster *Monster) DescribeEntityType(desc *entity.EntityTypeDesc) {
@@ -46,6 +50,8 @@ func (monster *Monster) setDefaultAttrs() {
 }
 
 func (monster *Monster) AI() {
+	// 用behaviors3go来实现一个基本的ai模块判断
+
 	var nearestPlayer *entity.Entity
 	for entity := range monster.InterestedIn {
 
@@ -80,7 +86,7 @@ func (monster *Monster) Tick() {
 		now := time.Now()
 		if !now.Before(monster.lastAttackTime.Add(monster.attackCD)) {
 			monster.FaceTo(monster.attackingTarget)
-			monster.attack(monster.attackingTarget.I.(*Player))
+			monster.attack(monster.attackingTarget.I.(*player.Player))
 			monster.lastAttackTime = now
 		}
 		return
@@ -138,7 +144,7 @@ func (monster *Monster) Attacking(player *entity.Entity) {
 	monster.Attrs.SetStr("action", "move")
 }
 
-func (monster *Monster) attack(player *Player) {
+func (monster *Monster) attack(player *player.Player) {
 	monster.CallAllClients("DisplayAttack", player.ID)
 
 	if player.GetInt("hp") <= 0 {

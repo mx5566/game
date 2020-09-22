@@ -1,17 +1,21 @@
-package main
+package player
 
 import (
 	"fmt"
+	pproto "github.com/golang/protobuf/proto"
 	"github.com/xiaonanln/goworld"
 	"github.com/xiaonanln/goworld/engine/common"
 	"github.com/xiaonanln/goworld/engine/consts"
 	"github.com/xiaonanln/goworld/engine/entity"
 	"github.com/xiaonanln/goworld/engine/gwlog"
+	"github.com/xiaonanln/goworld/examples/unity_demo/npc"
 	"github.com/xiaonanln/goworld/proto"
 	"strconv"
-	pproto "github.com/golang/protobuf/proto"
-
 )
+
+type IPlayer struct {
+	entity.IEntity
+}
 
 // Player 对象代表一名玩家
 type Player struct {
@@ -114,7 +118,7 @@ func (a *Player) Test_Client() {
 		Age:  10,
 		From: "China",
 	}
-	fmt.Println("原始数据:",p)
+	fmt.Println("原始数据:", p)
 
 	// 序列化
 	dataMarshal, err := pproto.Marshal(p)
@@ -122,7 +126,7 @@ func (a *Player) Test_Client() {
 		fmt.Println("proto.Unmarshal.Err: ", err)
 		return
 	}
-	fmt.Println("编码数据:",dataMarshal)
+	fmt.Println("编码数据:", dataMarshal)
 	// 反序列化
 	person := proto.Person{}
 	err = pproto.Unmarshal(dataMarshal, &person)
@@ -130,7 +134,6 @@ func (a *Player) Test_Client() {
 		fmt.Println("proto.Unmarshal.Err: ", err)
 		return
 	}
-
 
 	fmt.Printf("解码数据: 姓名：%s 年龄：%d 国籍：%s ", person.GetName(), person.GetAge(), person.GetFrom())
 }
@@ -152,7 +155,7 @@ func (a *Player) ShootHit_Client(victimID common.EntityID) {
 	}
 
 	gwlog.Infof("Shoot %s, monster hp %d", victimID, victim.Attrs.GetInt("hp"))
-	monster := victim.I.(*Monster)
+	monster := victim.I.(*npc.Monster)
 	monster.TakeDamage(50)
 }
 

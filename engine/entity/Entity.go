@@ -84,7 +84,7 @@ type entityMigrateData struct {
 	SpaceID           common.EntityID        `msgpack:"SP"`
 	TimerData         []byte                 `msgpack:"TD,omitempty"`
 	FilterProps       map[string]string      `msgpack:"FP"`
-	SyncingFromClient bool                   `msgpack""SFC`
+	SyncingFromClient bool                   `msgpack:"SFC"`
 	SyncInfoFlag      syncInfoFlag           `msgpack:"SIF"`
 }
 
@@ -130,7 +130,7 @@ func (e *Entity) Destroy() {
 	}
 	gwlog.Debugf("%s.Destroy ...", e)
 	e.destroyEntity(false)
-	dispatchercluster.SendNotifyDestroyEntity(e.ID)
+	_ = dispatchercluster.SendNotifyDestroyEntity(e.ID)
 }
 
 func (e *Entity) destroyEntity(isMigrate bool) {

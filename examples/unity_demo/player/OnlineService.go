@@ -1,4 +1,4 @@
-package main
+package player
 
 import (
 	"github.com/xiaonanln/goworld/engine/common"

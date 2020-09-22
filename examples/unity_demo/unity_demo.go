@@ -2,26 +2,21 @@ package main
 
 import (
 	"github.com/xiaonanln/goworld"
-)
-
-var (
-	_SERVICE_NAMES = []string{
-		"OnlineService",
-		"SpaceService",
-	}
+	"github.com/xiaonanln/goworld/examples/unity_demo/npc"
+	"github.com/xiaonanln/goworld/examples/unity_demo/player"
 )
 
 func main() {
-	goworld.RegisterSpace(&MySpace{}) // 注册自定义的Space类型
+	goworld.RegisterSpace(&player.MySpace{}) // 注册自定义的Space类型
 
-	goworld.RegisterService("OnlineService", &OnlineService{}, 3)
-	goworld.RegisterService("SpaceService", &SpaceService{}, 3)
+	goworld.RegisterService("OnlineService", &player.OnlineService{}, 3)
+	goworld.RegisterService("SpaceService", &player.SpaceService{}, 3)
 	// 注册Account类型
-	goworld.RegisterEntity("Account", &Account{})
+	goworld.RegisterEntity("Account", &player.Account{})
 	// 注册Monster类型
-	goworld.RegisterEntity("Monster", &Monster{})
+	goworld.RegisterEntity("Monster", &npc.Monster{})
 	// 注册Avatar类型，并定义属性
-	goworld.RegisterEntity("Player", &Player{})
+	goworld.RegisterEntity("Player", &player.Player{})
 	// 运行游戏服务器
 	goworld.Run()
 }
