@@ -1,0 +1,7 @@
+// 统计数据库的大小
+SELECT table_schema AS "Database", ROUND(SUM(data_length + index_length) / 1024 / 1024, 2) AS "Size (MB)" FROM information_schema.TABLES GROUP BY table_schema;
+
+
+
+mysqldump <parameters> | pv --progress --size 100m > dumpfile.sql
+利用pv显示进度
