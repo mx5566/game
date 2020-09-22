@@ -12,7 +12,7 @@ type MonsterBehavior struct {
 
 }
 
-func NewMonsterBehavior(monster inter.IMonster) *MonsterBehavior {
+func NewMonsterBehavior(monster inter.IMonster) inter.IMonsterBehavior {
 	return &MonsterBehavior{
 		monster: monster,
 		bb:      b3core.NewBlackboard(),
