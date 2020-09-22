@@ -6,3 +6,5 @@ var (
 		"SpaceService",
 	}
 )
+
+const FRAME_TIME = 20

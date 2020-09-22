@@ -8,7 +8,6 @@ import (
 	"github.com/xiaonanln/goworld/engine/consts"
 	"github.com/xiaonanln/goworld/engine/entity"
 	"github.com/xiaonanln/goworld/engine/gwlog"
-	"github.com/xiaonanln/goworld/examples/unity_demo/npc"
 	"github.com/xiaonanln/goworld/proto"
 	"strconv"
 )
@@ -155,7 +154,7 @@ func (a *Player) ShootHit_Client(victimID common.EntityID) {
 	}
 
 	gwlog.Infof("Shoot %s, monster hp %d", victimID, victim.Attrs.GetInt("hp"))
-	monster := victim.I.(*npc.Monster)
+	monster := victim.I.(*Monster)
 	monster.TakeDamage(50)
 }
 
