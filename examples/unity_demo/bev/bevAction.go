@@ -6,8 +6,8 @@ import (
 	b3config "github.com/magicsea/behavior3go/config"
 	b3core "github.com/magicsea/behavior3go/core"
 	"github.com/xiaonanln/goworld/engine/gwlog"
-	"github.com/xiaonanln/goworld/examples/unity_demo/player"
-	"math"
+	"github.com/xiaonanln/goworld/examples/unity_demo/common"
+	"github.com/xiaonanln/goworld/examples/unity_demo/inter"
 	"math/rand"
 	"time"
 )
@@ -30,12 +30,12 @@ func (this *HaveTarget) OnTick(tick *b3core.Tick) b3.Status {
 		return b3.FAILURE
 	}
 
-	f := tick.GetTarget().(*player.IPlayer)
+	/*f := tick.GetTarget().(inter.IMonster)
 	_, b := f.gl.entitys[id]
 	if !b {
 		tick.Blackboard.Set(this.index, int32(0), "", "")
 		return b3.FAILURE
-	}
+	}*/
 	return b3.SUCCESS
 }
 
@@ -80,7 +80,7 @@ func (this *RandWait) OnOpen(tick *b3core.Tick) {
 }
 
 func (this *RandWait) OnTick(tick *b3core.Tick) b3.Status {
-	var currTime int64 = time.Now().UnixNano() / 1000000
+	var currTime = time.Now().UnixNano() / 1000000
 	var endTime = tick.Blackboard.GetInt64("endTime", tick.GetTree().GetID(), this.GetID())
 
 	if currTime > endTime {
@@ -121,8 +121,8 @@ func (this *RandMove) Initialize(setting *b3config.BTNodeCfg) {
 }
 
 func (this *RandMove) OnTick(tick *b3core.Tick) b3.Status {
-	f := tick.GetTarget().(*Fighter)
-	f.Move(rand.Float32() * 360)
+	f := tick.GetTarget().(inter.IMonster)
+	f.Move()
 	return b3.SUCCESS
 }
 
@@ -136,7 +136,7 @@ func (this *Shoot) Initialize(setting *b3config.BTNodeCfg) {
 }
 
 func (this *Shoot) OnTick(tick *b3core.Tick) b3.Status {
-	f := tick.GetTarget().(*Fighter)
+	f := tick.GetTarget().(inter.IMonster)
 	f.Shot()
 	return b3.SUCCESS
 }
@@ -157,7 +157,7 @@ func (this *TurnTarget) OnTick(tick *b3core.Tick) b3.Status {
 	if id < 1 {
 		return b3.FAILURE
 	}
-	f := tick.GetTarget().(*Fighter)
+	/*f := tick.GetTarget().(inter.IMonster)
 	tball, b := f.gl.entitys[id]
 	if !b {
 		tick.Blackboard.Set(this.index, uint32(0), "", "")
@@ -168,7 +168,7 @@ func (this *TurnTarget) OnTick(tick *b3core.Tick) b3.Status {
 	a := v.AngleY() * 180 / math.Pi
 
 	gwlog.Infof("%v TurnTarget angle=%v  v=%v,%v", f.id, a, v.X, v.Y)
-	f.Move(a)
+	f.Move(a)*/
 
 	return b3.SUCCESS
 }
@@ -177,31 +177,34 @@ func (this *TurnTarget) OnTick(tick *b3core.Tick) b3.Status {
 type FindItem struct {
 	b3core.Action
 	index string
-	etype EntityType
+	etype common.EntityType
 	dis   float32
 }
 
 func (this *FindItem) Initialize(setting *b3config.BTNodeCfg) {
 	this.Action.Initialize(setting)
 	this.index = setting.GetPropertyAsString("index")
-	this.etype = EntityType(setting.GetPropertyAsInt("etype"))
+	this.etype = common.EntityType(setting.GetPropertyAsInt("etype"))
 	this.dis = float32(setting.GetProperty("range"))
 }
 
 func (this *FindItem) OnTick(tick *b3core.Tick) b3.Status {
-	f := tick.GetTarget().(*Fighter)
+	_ = tick.GetTarget().(inter.IMonster)
 	tick.Blackboard.Set(this.index, int32(0), "", "")
 
-	ball := f.FindNearItem(this.dis, this.etype)
+
+	/*ball := f.FindNearItem(this.dis, this.etype)
 	if nil == ball {
 		return b3.FAILURE
 	}
 
 	id := ball.GetID()
 	tick.Blackboard.Set(this.index, id, "", "")
-	gwlog.Infof("FindItem %v dis:%v", id, this.dis)
+	log.Info("FindItem %v dis:%v", id, this.dis)
 	// var currTime int64 = time.Now().UnixNano() / 1000000
 	// tick.Blackboard.Set("targetTime", currTime, "", "")
+	*/
+
 	return b3.SUCCESS
 }
 
@@ -269,8 +272,8 @@ func (this *HpLess) Initialize(setting *b3config.BTNodeCfg) {
 }
 
 func (this *HpLess) OnTick(tick *b3core.Tick) b3.Status {
-	f := tick.GetTarget().(*Fighter)
-	rate := float32(f.hp) / float32(HPMAX)
+	f := tick.GetTarget().(inter.IMonster)
+	rate := float32(f.Hp()) / float32(f.HpMax())
 	if rate < this.rate {
 		return b3.SUCCESS
 	}
@@ -316,3 +319,17 @@ func (this *ParallelComposite) OnTick(tick *b3core.Tick) b3.Status {
 	}
 	return b3.FAILURE
 }
+
+/////////////////////////////////myself////////////////////////////////
+// idle
+
+
+// find nearest target  if not find monster idling
+// if find target and target distance than
+
+
+//
+
+
+
+

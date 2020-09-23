@@ -12,9 +12,6 @@ import (
 	"strconv"
 )
 
-type IPlayer struct {
-	entity.IEntity
-}
 
 // Player 对象代表一名玩家
 type Player struct {

@@ -89,6 +89,31 @@ func (monster *Monster) AI() {
 	}*/
 }
 
+func (monster *Monster) Move() {
+	if monster.movingToTarget != nil && monster.IsInterestedIn(monster.movingToTarget) {
+		mypos := monster.GetPosition()
+		direction := monster.movingToTarget.GetPosition().Sub(mypos)
+		direction.Y = 0
+
+		t := direction.Normalized().Mul(monster.GetSpeed() * 30 / 1000.0)
+		monster.SetPosition(mypos.Add(t))
+		monster.FaceTo(monster.movingToTarget)
+		return
+	}
+}
+
+func (monster *Monster) Shot() {
+	gwlog.Debugf("Shot Test")
+}
+
+func (monster *Monster) Hp() int64 {
+	return monster.GetInt("hp")
+}
+
+func (monster *Monster) HpMax() int64 {
+	return monster.GetInt("hpmax")
+}
+
 func (monster *Monster) Tick() {
 	if monster.attackingTarget != nil && monster.IsInterestedIn(monster.attackingTarget) {
 		now := time.Now()

@@ -8,3 +8,5 @@ var (
 )
 
 const FRAME_TIME = 20
+
+type EntityType int
