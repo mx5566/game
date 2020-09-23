@@ -326,7 +326,21 @@ func (this *ParallelComposite) OnTick(tick *b3core.Tick) b3.Status {
 
 // find nearest target  if not find monster idling
 // if find target and target distance than
+type FindTarget struct {
 
+}
+
+type AttackTarget struct {
+
+}
+
+type MoveToTarget struct {
+
+}
+
+type Idle struct {
+
+}
 
 //
 
