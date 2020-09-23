@@ -34,7 +34,7 @@ func (monster *Monster) DescribeEntityType(desc *entity.EntityTypeDesc) {
 
 func (monster *Monster) OnCreated() {
 	monster.Entity.OnCreated()
-	monster.ai = bev.NewMonsterBehavior(monster)
+	/*monster.ai = */ bev.NewMonsterBehavior( /*monster*/ )
 }
 
 func (monster *Monster) OnEnterSpace() {
