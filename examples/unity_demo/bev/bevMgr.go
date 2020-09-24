@@ -7,11 +7,19 @@ import (
 	b3core "github.com/magicsea/behavior3go/core"
 	b3loader "github.com/magicsea/behavior3go/loader"
 	"github.com/xiaonanln/goworld/engine/gwlog"
+	"os"
 )
 
 func InitBev() {
+	str,_ := os.Getwd()
+
+	gwlog.Debugf("before----------------- %s", "start bev mgr" + str)
 	mapTrees = make(map[string]*b3core.BehaviorTree)
-	bevMainTree = CreateBevTree("b3.json")
+
+
+	bevMainTree = CreateBevTree(str + "/examples/unity_demo/bev/monster.json")
+
+	gwlog.Debugf("after ----------------- %s", bevMainTree.GetTitile())
 }
 
 //主树
@@ -25,6 +33,7 @@ func GetBevTree() *b3core.BehaviorTree {
 var mapTrees map[string]*b3core.BehaviorTree
 
 func CreateBevTree(name string) *b3core.BehaviorTree {
+	gwlog.Debugf("CreateBevTree %s", name)
 	b, ok := mapTrees[name]
 	if ok {
 		return b

@@ -1,1 +1,1 @@
-goworld.exe start examples/unity_demo
+start goworld.exe start examples/unity_demo

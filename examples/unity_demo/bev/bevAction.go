@@ -385,7 +385,7 @@ type MoveToTarget struct {
 	index string
 }
 
-func (this *MoveToTarget) Initialize(setting *b3config.BTNodeCfg) {
+	func (this *MoveToTarget) Initialize(setting *b3config.BTNodeCfg) {
 	this.Action.Initialize(setting)
 	this.index = setting.GetPropertyAsString("index")
 }

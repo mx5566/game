@@ -2,6 +2,7 @@ package bev
 
 import (
 	b3core "github.com/magicsea/behavior3go/core"
+	"github.com/xiaonanln/goworld/engine/gwlog"
 	"github.com/xiaonanln/goworld/examples/unity_demo/inter"
 )
 
@@ -26,5 +27,9 @@ func (ai *MonsterBehavior) Start() {
 func (ai *MonsterBehavior) Update(dtime float32) {
 	//更新行为树
 	tree := GetBevTree()
+	tree.Print()
+
+	gwlog.Debugf("tree name %s", tree.GetTitile())
+
 	tree.Tick(ai.npc, ai.bb)
 }

@@ -1,0 +1,149 @@
+{
+  "version": "0.3.0",
+  "scope": "tree",
+  "id": "7be6249b-244a-45c7-855f-8d538dd58aa4",
+  "title": "A behavior tree",
+  "description": "",
+  "root": "24b09367-f78d-4691-9c95-2eb935cdcae8",
+  "properties": {},
+  "nodes": {
+    "5a712ad7-b562-4162-b8ed-e0ce3c957015": {
+      "id": "5a712ad7-b562-4162-b8ed-e0ce3c957015",
+      "name": "AttackTarget",
+      "category": "action",
+      "title": "AttackTarget",
+      "description": "",
+      "properties": {
+        "index": "id"
+      },
+      "display": {
+        "x": -192,
+        "y": 24
+      }
+    },
+    "d4488276-59ba-41f5-bc88-497b8d05e412": {
+      "id": "d4488276-59ba-41f5-bc88-497b8d05e412",
+      "name": "MoveToTarget",
+      "category": "action",
+      "title": "MoveToTarget",
+      "description": "",
+      "properties": {
+        "index": "id"
+      },
+      "display": {
+        "x": -192,
+        "y": -72
+      }
+    },
+    "5c533aff-5179-490e-bd0f-370dd74976c9": {
+      "id": "5c533aff-5179-490e-bd0f-370dd74976c9",
+      "name": "Idle",
+      "category": "action",
+      "title": "Idle",
+      "description": "",
+      "properties": {},
+      "display": {
+        "x": -24,
+        "y": -204
+      }
+    },
+    "48a7275d-b00d-47c5-8e50-84724c14bc4f": {
+      "id": "48a7275d-b00d-47c5-8e50-84724c14bc4f",
+      "name": "Priority",
+      "category": "composite",
+      "title": "Priority",
+      "description": "",
+      "properties": {},
+      "display": {
+        "x": -252,
+        "y": -228
+      },
+      "children": [
+        "cbf5d601-59b7-4ffe-8ac4-e59b0c0a5bc9",
+        "5c533aff-5179-490e-bd0f-370dd74976c9"
+      ]
+    },
+    "cbf5d601-59b7-4ffe-8ac4-e59b0c0a5bc9": {
+      "id": "cbf5d601-59b7-4ffe-8ac4-e59b0c0a5bc9",
+      "name": "FindTarget",
+      "category": "action",
+      "title": "FindTarget",
+      "description": "",
+      "properties": {
+        "index": "id"
+      },
+      "display": {
+        "x": -24,
+        "y": -276
+      }
+    },
+    "24b09367-f78d-4691-9c95-2eb935cdcae8": {
+      "id": "24b09367-f78d-4691-9c95-2eb935cdcae8",
+      "name": "Sequence",
+      "category": "composite",
+      "title": "Sequence",
+      "description": "",
+      "properties": {},
+      "display": {
+        "x": -456,
+        "y": 0
+      },
+      "children": [
+        "48a7275d-b00d-47c5-8e50-84724c14bc4f",
+        "d4488276-59ba-41f5-bc88-497b8d05e412",
+        "5a712ad7-b562-4162-b8ed-e0ce3c957015"
+      ]
+    }
+  },
+  "display": {
+    "camera_x": 960,
+    "camera_y": 469,
+    "camera_z": 1,
+    "x": -600,
+    "y": 12
+  },
+  "custom_nodes": [
+    {
+      "version": "0.3.0",
+      "scope": "node",
+      "name": "Idle",
+      "category": "action",
+      "title": "Idle",
+      "description": null,
+      "properties": {}
+    },
+    {
+      "version": "0.3.0",
+      "scope": "node",
+      "name": "MoveToTarget",
+      "category": "action",
+      "title": "MoveToTarget",
+      "description": null,
+      "properties": {
+        "index": "id"
+      }
+    },
+    {
+      "version": "0.3.0",
+      "scope": "node",
+      "name": "AttackTarget",
+      "category": "action",
+      "title": "AttackTarget",
+      "description": null,
+      "properties": {
+        "index": "id"
+      }
+    },
+    {
+      "version": "0.3.0",
+      "scope": "node",
+      "name": "FindTarget",
+      "category": "action",
+      "title": "FindTarget",
+      "description": null,
+      "properties": {
+        "index": "id"
+      }
+    }
+  ]
+}
