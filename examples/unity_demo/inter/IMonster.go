@@ -19,8 +19,8 @@ type IMonster interface {
 
 	Move(id common.EntityID) bool
 	Shot()
-	Hp() int
-	HpMax() int
+	Hp() int64
+	HpMax() int64
 	// 获取最近的目标实体
 	GetNearestTarget(typeName string) *entity.Entity
 	Attack(id common.EntityID) bool
