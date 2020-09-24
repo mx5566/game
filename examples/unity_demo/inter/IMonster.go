@@ -1,6 +1,9 @@
 package inter
 
-import "github.com/xiaonanln/goworld/engine/entity"
+import (
+	"github.com/xiaonanln/goworld/engine/common"
+	"github.com/xiaonanln/goworld/engine/entity"
+)
 
 /*
 @Time : 2020/9/22 21:42
@@ -14,8 +17,12 @@ import "github.com/xiaonanln/goworld/engine/entity"
 type IMonster interface {
 	entity.IEntity
 
-	Move()
+	Move(id common.EntityID) bool
 	Shot()
 	Hp() int
 	HpMax() int
+	// 获取最近的目标实体
+	GetNearestTarget(typeName string) *entity.Entity
+	Attack(id common.EntityID) bool
+	Idle()
 }

@@ -55,6 +55,11 @@ func createExtStructMaps() *b3.RegisterStructMaps {
 	st.Register("FindItem", &FindItem{})
 	st.Register("SubTree", &SubTreeNode{})
 
+	st.Register("FindTarget", &FindTarget{})
+	st.Register("AttackTarget", &AttackTarget{})
+	st.Register("MoveToTarget", &MoveToTarget{})
+	st.Register("Idle", &Idle{})
+
 	//conditions
 	st.Register("HaveTarget", &HaveTarget{})
 	st.Register("CheckBool", &CheckBool{})

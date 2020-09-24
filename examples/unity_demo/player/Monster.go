@@ -1,9 +1,11 @@
 package player
 
 import (
+	"github.com/xiaonanln/goworld/engine/common"
 	"github.com/xiaonanln/goworld/examples/unity_demo/bev"
-	"github.com/xiaonanln/goworld/examples/unity_demo/common"
+	mycommon "github.com/xiaonanln/goworld/examples/unity_demo/common"
 	"github.com/xiaonanln/goworld/examples/unity_demo/inter"
+	"strings"
 	"time"
 
 	"github.com/xiaonanln/goworld/engine/entity"
@@ -57,7 +59,7 @@ func (monster *Monster) setDefaultAttrs() {
 
 func (monster *Monster) AI() {
 	// 用behaviors3go来实现一个基本的ai模块判断
-	dtime := float32(common.FRAME_TIME) / float32(1000)
+	dtime := float32(mycommon.FRAME_TIME) / float32(1000)
 	monster.ai.Update(dtime)
 
 	/*var nearestPlayer *entity.Entity
@@ -89,52 +91,29 @@ func (monster *Monster) AI() {
 	}*/
 }
 
-func (monster *Monster) Move() {
-	if monster.movingToTarget != nil && monster.IsInterestedIn(monster.movingToTarget) {
-		mypos := monster.GetPosition()
-		direction := monster.movingToTarget.GetPosition().Sub(mypos)
-		direction.Y = 0
-
-		t := direction.Normalized().Mul(monster.GetSpeed() * 30 / 1000.0)
-		monster.SetPosition(mypos.Add(t))
-		monster.FaceTo(monster.movingToTarget)
-		return
-	}
-}
-
-func (monster *Monster) Shot() {
-	gwlog.Debugf("Shot Test")
-}
-
-func (monster *Monster) Hp() int64 {
-	return monster.GetInt("hp")
-}
-
-func (monster *Monster) HpMax() int64 {
-	return monster.GetInt("hpmax")
-}
-
 func (monster *Monster) Tick() {
-	if monster.attackingTarget != nil && monster.IsInterestedIn(monster.attackingTarget) {
-		now := time.Now()
-		if !now.Before(monster.lastAttackTime.Add(monster.attackCD)) {
-			monster.FaceTo(monster.attackingTarget)
-			monster.attack(monster.attackingTarget.I.(*Player))
-			monster.lastAttackTime = now
+	return
+	/*
+		if monster.attackingTarget != nil && monster.IsInterestedIn(monster.attackingTarget) {
+			now := time.Now()
+			if !now.Before(monster.lastAttackTime.Add(monster.attackCD)) {
+				monster.FaceTo(monster.attackingTarget)
+				monster.attack(monster.attackingTarget.I.(*Player))
+				monster.lastAttackTime = now
+			}
+			return
 		}
-		return
-	}
 
-	if monster.movingToTarget != nil && monster.IsInterestedIn(monster.movingToTarget) {
-		mypos := monster.GetPosition()
-		direction := monster.movingToTarget.GetPosition().Sub(mypos)
-		direction.Y = 0
+		if monster.movingToTarget != nil && monster.IsInterestedIn(monster.movingToTarget) {
+			mypos := monster.GetPosition()
+			direction := monster.movingToTarget.GetPosition().Sub(mypos)
+			direction.Y = 0
 
-		t := direction.Normalized().Mul(monster.GetSpeed() * 30 / 1000.0)
-		monster.SetPosition(mypos.Add(t))
-		monster.FaceTo(monster.movingToTarget)
-		return
-	}
+			t := direction.Normalized().Mul(monster.GetSpeed() * 30 / 1000.0)
+			monster.SetPosition(mypos.Add(t))
+			monster.FaceTo(monster.movingToTarget)
+			return
+		}*/
 
 }
 
@@ -174,7 +153,7 @@ func (monster *Monster) Attacking(player *entity.Entity) {
 
 	monster.movingToTarget = nil
 	monster.attackingTarget = player
-	monster.Attrs.SetStr("action", "move")
+	monster.Attrs.SetStr("action", "attack")
 }
 
 func (monster *Monster) attack(player *Player) {
@@ -204,4 +183,90 @@ func (monster *Monster) TakeDamage(damage int64) {
 		monster.Attrs.SetStr("action", "death")
 		monster.Destroy()
 	}
+}
+
+////////////////////////////////new add//////////////////////////
+
+func (monster *Monster) Shot() {
+	gwlog.Debugf("Shot Test")
+}
+
+func (monster *Monster) Hp() int64 {
+	return monster.GetInt("hp")
+}
+
+func (monster *Monster) HpMax() int64 {
+	return monster.GetInt("hpmax")
+}
+
+func (monster *Monster) GetNearestTarget(typeName string) *entity.Entity {
+	var nearestPlayer *entity.Entity
+	for ent := range monster.InterestedIn {
+
+		// fast than > < != ==
+		if strings.Compare(ent.TypeName, typeName) != 0 {
+			continue
+		}
+
+		if ent.GetInt("hp") <= 0 {
+			// dead
+			continue
+		}
+
+		if nearestPlayer == nil || nearestPlayer.DistanceTo(&monster.Entity) > ent.DistanceTo(&monster.Entity) {
+			nearestPlayer = ent
+		}
+	}
+
+	return nearestPlayer
+}
+
+func (monster *Monster) Attack(id common.EntityID) bool {
+	ent := monster.Space.GetEntity(id)
+	if ent == nil {
+		return false
+	}
+
+	if ent.TypeName != "Player" {
+		return false
+	}
+
+	player := ent.I.(*Player)
+
+	monster.CallAllClients("DisplayAttack", ent.ID)
+
+	if ent.GetInt("hp") <= 0 {
+		return false
+	}
+
+	player.TakeDamage(monster.GetDamage())
+	monster.Attrs.SetStr("action", "attack")
+	return true
+}
+
+func (monster *Monster) Idle() {
+	monster.Attrs.SetStr("action", "idle")
+	return
+}
+
+func (monster *Monster) Move(id common.EntityID) bool {
+	ent := monster.Space.GetEntity(id)
+	if ent == nil {
+		return false
+	}
+
+	if monster.IsInterestedIn(ent) {
+		return false
+	}
+
+	myPos := monster.GetPosition()
+	direction := ent.GetPosition().Sub(myPos)
+	direction.Y = 0
+
+	t := direction.Normalized().Mul(monster.GetSpeed() * 30 / 1000.0)
+	monster.SetPosition(myPos.Add(t))
+	monster.FaceTo(ent)
+
+	monster.Attrs.SetStr("action", "move")
+	return true
 }

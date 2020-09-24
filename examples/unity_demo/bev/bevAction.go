@@ -5,8 +5,9 @@ import (
 	b3 "github.com/magicsea/behavior3go"
 	b3config "github.com/magicsea/behavior3go/config"
 	b3core "github.com/magicsea/behavior3go/core"
+	"github.com/xiaonanln/goworld/engine/common"
 	"github.com/xiaonanln/goworld/engine/gwlog"
-	"github.com/xiaonanln/goworld/examples/unity_demo/common"
+	mycommon "github.com/xiaonanln/goworld/examples/unity_demo/common"
 	"github.com/xiaonanln/goworld/examples/unity_demo/inter"
 	"math/rand"
 	"time"
@@ -122,7 +123,7 @@ func (this *RandMove) Initialize(setting *b3config.BTNodeCfg) {
 
 func (this *RandMove) OnTick(tick *b3core.Tick) b3.Status {
 	f := tick.GetTarget().(inter.IMonster)
-	f.Move()
+	f.Move("")
 	return b3.SUCCESS
 }
 
@@ -177,21 +178,20 @@ func (this *TurnTarget) OnTick(tick *b3core.Tick) b3.Status {
 type FindItem struct {
 	b3core.Action
 	index string
-	etype common.EntityType
+	etype mycommon.EntityType
 	dis   float32
 }
 
 func (this *FindItem) Initialize(setting *b3config.BTNodeCfg) {
 	this.Action.Initialize(setting)
 	this.index = setting.GetPropertyAsString("index")
-	this.etype = common.EntityType(setting.GetPropertyAsInt("etype"))
+	this.etype = mycommon.EntityType(setting.GetPropertyAsInt("etype"))
 	this.dis = float32(setting.GetProperty("range"))
 }
 
 func (this *FindItem) OnTick(tick *b3core.Tick) b3.Status {
 	_ = tick.GetTarget().(inter.IMonster)
 	tick.Blackboard.Set(this.index, int32(0), "", "")
-
 
 	/*ball := f.FindNearItem(this.dis, this.etype)
 	if nil == ball {
@@ -323,27 +323,100 @@ func (this *ParallelComposite) OnTick(tick *b3core.Tick) b3.Status {
 /////////////////////////////////myself////////////////////////////////
 // idle
 
-
 // find nearest target  if not find monster idling
 // if find target and target distance than
 type FindTarget struct {
-
+	b3core.Action
+	index    string // 值存储在blackboard >> index是key,对应的值是目标的ID
+	typeName string // 目标类型 怪物、玩家、宠物等等
 }
 
+func (this *FindTarget) Initialize(setting *b3config.BTNodeCfg) {
+	this.Action.Initialize(setting)
+	this.index = setting.GetPropertyAsString("index")
+	this.typeName = setting.GetPropertyAsString("typeName")
+}
+
+func (this *FindTarget) OnTick(tick *b3core.Tick) b3.Status {
+	object := tick.GetTarget().(inter.IMonster)
+	tick.Blackboard.Set(this.index, "", "", "")
+
+	nearestTarget := object.GetNearestTarget(this.typeName)
+	if nearestTarget == nil {
+		return b3.FAILURE
+	}
+
+	// set nearest target
+	tick.Blackboard.Set(this.index, nearestTarget.ID, "", "")
+	return b3.SUCCESS
+}
+
+// attack node
 type AttackTarget struct {
+	b3core.Action
+	index string
+}
+
+func (this *AttackTarget) Initialize(setting *b3config.BTNodeCfg) {
+	this.Action.Initialize(setting)
+	this.index = setting.GetPropertyAsString("index")
 
 }
 
+func (this *AttackTarget) OnTick(tick *b3core.Tick) b3.Status {
+	object := tick.GetTarget().(inter.IMonster)
+	id := tick.Blackboard.Get(this.index, "", "").(string)
+	if id == "" {
+		return b3.FAILURE
+	}
+
+	ret := object.Attack(common.EntityID(id))
+
+	if ret {
+		return b3.SUCCESS
+	}
+
+	return b3.FAILURE
+}
+
+// move target
 type MoveToTarget struct {
-
+	b3core.Action
+	index string
 }
 
+func (this *MoveToTarget) Initialize(setting *b3config.BTNodeCfg) {
+	this.Action.Initialize(setting)
+	this.index = setting.GetPropertyAsString("index")
+}
+
+func (this *MoveToTarget) OnTick(tick *b3core.Tick) b3.Status {
+	object := tick.GetTarget().(inter.IMonster)
+	id := tick.Blackboard.Get(this.index, "", "").(string)
+	if id == "" {
+		return b3.FAILURE
+	}
+
+	ret := object.Move(common.EntityID(id))
+
+	if ret {
+		return b3.SUCCESS
+	}
+
+	return b3.FAILURE
+}
+
+// idle node
 type Idle struct {
-
+	b3core.Action
 }
 
-//
+func (this *Idle) Initialize(setting *b3config.BTNodeCfg) {
+	this.Action.Initialize(setting)
+}
 
-
-
-
+func (this *Idle) OnTick(tick *b3core.Tick) b3.Status {
+	object := tick.GetTarget().(inter.IMonster)
+	object.Idle()
+	return b3.SUCCESS
+}
