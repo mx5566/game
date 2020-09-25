@@ -70,7 +70,8 @@
       "title": "FindTarget",
       "description": "",
       "properties": {
-        "index": "id"
+        "index": "id",
+        "typeName": "player"
       },
       "display": {
         "x": -24,

@@ -329,6 +329,7 @@ type FindTarget struct {
 	b3core.Action
 	index    string // 值存储在blackboard >> index是key,对应的值是目标的ID
 	typeName string // 目标类型 怪物、玩家、宠物等等
+
 }
 
 func (this *FindTarget) Initialize(setting *b3config.BTNodeCfg) {
@@ -385,7 +386,7 @@ type MoveToTarget struct {
 	index string
 }
 
-	func (this *MoveToTarget) Initialize(setting *b3config.BTNodeCfg) {
+func (this *MoveToTarget) Initialize(setting *b3config.BTNodeCfg) {
 	this.Action.Initialize(setting)
 	this.index = setting.GetPropertyAsString("index")
 }
