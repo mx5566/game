@@ -81,7 +81,7 @@ func GetFileList(path string) error {
 
 	if err != nil {
 		fmt.Printf("filepath.Walk() returned %v\n", err)
-		gwlog.Fatalf()
+		gwlog.Fatalf("filepath.Walk() returned %v\n", err)
 		return err
 	}
 
