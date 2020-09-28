@@ -2,3 +2,8 @@ go build ./cmd/goworld
 
 
 
+
+go test -v -test.run TestGWLog ./engine/gwlog/gwlogex.go ./engine/gwlog/gwlogex_test.go ./engine/gwlog/gwlog.go ./engine/gwlog/gwlog_test.go
+
+
+go test -v -test.run TestGwExLog ./engine/gwlog/gwlogex.go ./engine/gwlog/gwlogex_test.go ./engine/gwlog/gwlog.go

@@ -64,19 +64,19 @@ func SetupGWLog(component string, logLevel string, logFile string, logStderr boo
 }
 
 // SetupGWLog setup the GoWord log system
-func SetupGWLogEx(component string, logLevel string, logFile string, logStderr bool) {
-	gwlog.SetSource(component)
-	gwlog.Infof("Set log level to %s", logLevel)
-	gwlog.SetLevel(gwlog.ParseLevel(logLevel))
+func SetupGWLogEx(component string, logLevel string, logFile string, logErrFile string) {
+	gwlog.SetSourceEx(component)
+	gwlog.InfofE("Set log levelE to %s", logLevel)
+	gwlog.SetLevelEx(gwlog.ParseLevel(logLevel))
 
-	var outputs []string
-	if logStderr {
-		outputs = append(outputs, "stderr")
+	var outputs = make(map[string]string)
+	if logErrFile != "" {
+		outputs["errFile"] = logErrFile
 	}
 	if logFile != "" {
-		outputs = append(outputs, logFile)
+		outputs["logFile"] = logFile
 	}
-	gwlog.SetOutput(outputs)
+	gwlog.SetOutputEx(outputs)
 
 }
 

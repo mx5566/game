@@ -114,7 +114,7 @@ func ParseLevel(s string) Level {
 func rebuildLoggerFromCfg() {
 	if newLogger, err := cfg.Build(); err == nil {
 		if logger != nil {
-			logger.Sync()
+			_ = logger.Sync()
 		}
 		logger = newLogger
 		//logger = logger.With(zap.Time("ts", time.Now()))
