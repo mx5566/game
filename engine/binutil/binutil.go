@@ -78,6 +78,8 @@ func SetupGWLogEx(component string, logLevel string, logFile string, logErrFile 
 	}
 	gwlog.SetOutputEx(outputs)
 
+	gwlog.InfofE("log file config ok...")
+
 }
 
 func PrintSupervisorTag(tag string) {

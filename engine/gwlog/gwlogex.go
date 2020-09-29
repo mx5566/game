@@ -1,7 +1,6 @@
 package gwlog
 
 import (
-	"fmt"
 	rotatelogs "github.com/lestrrat-go/file-rotatelogs"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -58,17 +57,18 @@ func getWriter(filename string) io.Writer {
 	str, _ := os.Getwd()
 
 	ostype := runtime.GOOS // 获取系统类型
-	fmt.Println("dir cwd ----------------- " + str + "  type  " + ostype)
+	//fmt.Println("dir cwd ----------------- " + str + "  type  " + ostype)
 
 	if ostype == "windows" {
-		str += "\\"
+		str += "\\log\\"
+
 	} else if ostype == "linux" {
-		str += "/"
+		str += "/log/"
 	}
 
 	hook, erre := rotatelogs.New(
 		str+filename+".%Y%m%d%H", // 没有使用go风格反人类的format格式
-		rotatelogs.WithLinkName(filename),
+		//rotatelogs.WithLinkName(filename),
 		rotatelogs.WithMaxAge(time.Hour*24*7),
 		rotatelogs.WithRotationTime(time.Hour),
 	)
@@ -114,7 +114,7 @@ func SetOutputEx(outputs map[string]string) {
 
 	//strName := infoHook.(*rotatelogs.RotateLogs).CurrentFileName()
 
-	fmt.Printf("---------------------------- SetOutputEx %v", outputs)
+	//fmt.Printf("---------------------------- SetOutputEx %v", outputs)
 
 	// 最后创建具体的Logger
 	core = zapcore.NewTee(
