@@ -49,11 +49,22 @@ func ReadAllXlsx(path string) {
 	}
 }
 
-func Read(fileName string) {
+func CombineKeys(keys... string) {
+
+}
+
+func Read(fileName string, keys... string) map[interface{}]map[string]interface{}{
 	f, err := excelize.OpenFile(fileName)
 	if err != nil {
 		println(err.Error())
-		return
+		return nil
+	}
+
+	// 找出key
+	mapKeys := make(map[string]string)
+	for _, value := range keys {
+		fmt.Println(value)
+		mapKeys[value] = value
 	}
 
 	var mapFields = make(map[interface{}]map[string]interface{})
@@ -69,7 +80,7 @@ func Read(fileName string) {
 				if colCell == "" {
 					log.Panic("fileName " + fileName + " has field empty 0!!!")
 				}
-				fmt.Print(colCell)
+				//fmt.Print(colCell)
 				mapFieldNames[colCell] = colCell
 			}
 			continue
@@ -81,7 +92,7 @@ func Read(fileName string) {
 				if colCell == "" {
 					log.Panic("fileName " + fileName + " has field empty 1!!!")
 				}
-				fmt.Print(colCell)
+				//fmt.Print(colCell)
 				sliceFieldNames = append(sliceFieldNames, colCell)
 			}
 			continue
@@ -95,16 +106,20 @@ func Read(fileName string) {
 				}
 
 				colCell = compressStr(colCell)
-				fmt.Print(colCell)
+				//fmt.Print(colCell)
 				sliceFieldTypes = append(sliceFieldTypes, colCell)
 			}
 			continue
 		}
 
 		oneMapFields := make(map[string]interface{})
+		comKeys := ""
 		for index1, colCell := range row {
 			// 实际的值判断
 			fieldName := sliceFieldNames[index1]
+			if _, ok := mapKeys[fieldName]; ok {
+			}
+
 			switch sliceFieldTypes[index1] {
 			case "int64", "int32", "int":
 				ret, _ := strconv.Atoi(colCell)
@@ -116,7 +131,7 @@ func Read(fileName string) {
 			case "string":
 				oneMapFields[fieldName] = colCell
 			case "[]int":
-				sli := strings.Split(colCell, "|")
+				sli := strings.Split(colCell, ",")
 				sliTemp := []int{}
 				for _, value := range sli {
 					ret, _ := strconv.Atoi(value)
@@ -131,11 +146,13 @@ func Read(fileName string) {
 			case "map[string]string": // key1,value1|key2,value2
 
 			}
-
-			fmt.Print(colCell)
 		}
-		fmt.Println()
+		mapFields["1"] = oneMapFields
 	}
+
+	fmt.Println(mapFields)
+
+	return mapFields
 }
 
 type BaseI interface {
@@ -201,6 +218,6 @@ func GetFileList(path string) error {
 func ListFileFunc(p []string) {
 	for index, value := range p {
 		fmt.Println("Index = ", index, " Value = ", value)
-		Read(value)
+		Read(value, "ID")
 	}
 }

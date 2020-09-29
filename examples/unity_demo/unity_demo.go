@@ -5,7 +5,6 @@ import (
 	"github.com/xiaonanln/goworld"
 	"github.com/xiaonanln/goworld/examples/unity_demo/bev"
 	"github.com/xiaonanln/goworld/examples/unity_demo/player"
-	"github.com/xiaonanln/goworld/excelt"
 )
 
 func main() {
@@ -23,7 +22,7 @@ func main() {
 	bev.InitBev()
 	fmt.Print("))))))))))))))))))))))))))))")
 
-	excelt.Read("1.xlsx")
+	//excelt.Read("1.xlsx")
 	// 运行游戏服务器
 	goworld.Run()
 }
