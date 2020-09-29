@@ -1,0 +1,31 @@
+excel tools
+
+加载所有的文件
+按照特定的格式读取excel表格文件
+第一行注释名字
+第二行是程序名字
+第三行是数据类型样式
+
+读取目录下面的所有文件
+一个个解析文件
+第二行的字段名 
+根据第三行的数据类型
+
+
+
+type R struct {
+}
+
+type C struct {
+
+}
+
+
+type CombineKey struct {
+	
+}
+
+map<key, value> mmap;
+
+
+global.ItemBaseTable = Parse()
