@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"reflect"
 	"regexp"
 	"runtime"
 	"strconv"
@@ -49,11 +50,23 @@ func ReadAllXlsx(path string) {
 	}
 }
 
-func CombineKeys(keys... string) {
-
+func CombineKeys(keys ...interface{}) string{
+	//sort.Strings(keys)
+	com := []string{}
+	for _, key := range keys {
+		switch _ := key.(type) {
+		case int, int32, int64, int8, int16, uint, uint32, uint64, uint16, uint8 :
+			com = append(com, reflect.ValueOf(key).String())
+		case string:
+			com = append(com, key.(string))
+		default:
+			fmt.Println("unkonw type " + reflect.TypeOf(key).String())
+		}
+	}
+	return strings.Join(com, "_")
 }
 
-func Read(fileName string, keys... string) map[interface{}]map[string]interface{}{
+func Read(fileName string, keys... interface{}) map[interface{}]map[string]interface{}{
 	f, err := excelize.OpenFile(fileName)
 	if err != nil {
 		println(err.Error())
@@ -61,7 +74,7 @@ func Read(fileName string, keys... string) map[interface{}]map[string]interface{
 	}
 
 	// 找出key
-	mapKeys := make(map[string]string)
+	mapKeys := make(map[string]interface{})
 	for _, value := range keys {
 		fmt.Println(value)
 		mapKeys[value] = value
@@ -113,11 +126,12 @@ func Read(fileName string, keys... string) map[interface{}]map[string]interface{
 		}
 
 		oneMapFields := make(map[string]interface{})
-		comKeys := ""
+		comKeys := []string{}
 		for index1, colCell := range row {
 			// 实际的值判断
 			fieldName := sliceFieldNames[index1]
 			if _, ok := mapKeys[fieldName]; ok {
+				comKeys = append(comKeys, colCell)
 			}
 
 			switch sliceFieldTypes[index1] {
@@ -147,7 +161,8 @@ func Read(fileName string, keys... string) map[interface{}]map[string]interface{
 
 			}
 		}
-		mapFields["1"] = oneMapFields
+		//sort.Strings(comKeys)
+		mapFields[strings.Join(comKeys, "_")] = oneMapFields
 	}
 
 	fmt.Println(mapFields)
