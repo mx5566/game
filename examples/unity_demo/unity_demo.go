@@ -5,6 +5,7 @@ import (
 	"github.com/xiaonanln/goworld"
 	"github.com/xiaonanln/goworld/examples/unity_demo/bev"
 	"github.com/xiaonanln/goworld/examples/unity_demo/player"
+	_ "github.com/xiaonanln/goworld/excelt"
 )
 
 func main() {

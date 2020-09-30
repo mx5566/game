@@ -46,7 +46,8 @@ require (
 	golang.org/x/net v0.0.0-20191126235420-ef20fe5d7933
 	golang.org/x/sys v0.0.0-20191128015809-6d18c012aee9
 	google.golang.org/appengine v1.6.5 // indirect
-	google.golang.org/protobuf v1.23.0
+	google.golang.org/genproto v0.0.0-20200929141702-51c3e5b607fe
+	google.golang.org/protobuf v1.24.0
 	gopkg.in/eapache/queue.v1 v1.1.0 // indirect
 	gopkg.in/ini.v1 v1.51.0 // indirect
 	gopkg.in/mgo.v2 v2.0.0-20190816093944-a6b53ec6cb22

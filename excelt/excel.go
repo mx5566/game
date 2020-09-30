@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/360EntSecGroup-Skylar/excelize"
 	"github.com/xiaonanln/goworld/engine/gwlog"
-	_package "google.golang.org/genproto/googleapis/devtools/containeranalysis/v1beta1/package"
 	"log"
 	"os"
 	"path/filepath"
@@ -28,27 +27,41 @@ type TableRes interface {
 
 // 加载table
 func init() {
-	//Load()
+	Load()
 }
 
 func Load() {
 	var listpath = "."
 	_ = GetFileList(listpath)
+	pathHead := "excelt"
+
+	if ostype == "windows" {
+		pathHead += "\\"
+	} else if ostype == "linux" {
+		pathHead += "/"
+	}
 	for _, path := range listfile {
 		switch path {
-		case "equip.xlsx":
+		case pathHead + "equip.xlsx":
 			LoadEquip(path)
-		case "item.xlsx":
+		case pathHead + "item.xlsx":
 			LoadItem(path)
+		default:
+			fmt.Println("error path " + path)
 		}
 	}
 }
 
 func LoadItem(path string) {
-	Read()
+	items := Read(path, "ID")
+	fmt.Println("load table item !!!")
+	fmt.Println(items)
 }
 
 func LoadEquip(path string) {
+	equip := Read(path, "ID")
+	fmt.Println("load table equip !!!")
+	fmt.Println(equip)
 
 }
 
@@ -187,7 +200,7 @@ func Read(fileName string, keys ...string) map[interface{}]map[string]interface{
 		mapFields[strings.Join(comKeys, "_")] = oneMapFields
 	}
 
-	fmt.Println(mapFields)
+	//fmt.Println(mapFields)
 
 	return mapFields
 }
