@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/360EntSecGroup-Skylar/excelize"
 	"github.com/xiaonanln/goworld/engine/gwlog"
+	_package "google.golang.org/genproto/googleapis/devtools/containeranalysis/v1beta1/package"
 	"log"
 	"os"
 	"path/filepath"
@@ -27,11 +28,28 @@ type TableRes interface {
 
 // 加载table
 func init() {
-	Load()
+	//Load()
 }
 
 func Load() {
-	LoadItem
+	var listpath = "."
+	_ = GetFileList(listpath)
+	for _, path := range listfile {
+		switch path {
+		case "equip.xlsx":
+			LoadEquip(path)
+		case "item.xlsx":
+			LoadItem(path)
+		}
+	}
+}
+
+func LoadItem(path string) {
+	Read()
+}
+
+func LoadEquip(path string) {
+
 }
 
 func compressStr(str string) string {
