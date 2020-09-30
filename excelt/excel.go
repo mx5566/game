@@ -31,7 +31,7 @@ func init() {
 }
 
 func Load() {
-
+	LoadItem
 }
 
 func compressStr(str string) string {
@@ -50,12 +50,12 @@ func ReadAllXlsx(path string) {
 	}
 }
 
-func CombineKeys(keys ...interface{}) string{
+func CombineKeys(keys ...interface{}) string {
 	//sort.Strings(keys)
 	com := []string{}
 	for _, key := range keys {
-		switch _ := key.(type) {
-		case int, int32, int64, int8, int16, uint, uint32, uint64, uint16, uint8 :
+		switch key.(type) {
+		case int, int32, int64, int8, int16, uint, uint32, uint64, uint16, uint8:
 			com = append(com, reflect.ValueOf(key).String())
 		case string:
 			com = append(com, key.(string))
@@ -66,7 +66,7 @@ func CombineKeys(keys ...interface{}) string{
 	return strings.Join(com, "_")
 }
 
-func Read(fileName string, keys... interface{}) map[interface{}]map[string]interface{}{
+func Read(fileName string, keys ...string) map[interface{}]map[string]interface{} {
 	f, err := excelize.OpenFile(fileName)
 	if err != nil {
 		println(err.Error())
@@ -139,9 +139,13 @@ func Read(fileName string, keys... interface{}) map[interface{}]map[string]inter
 				ret, _ := strconv.Atoi(colCell)
 				oneMapFields[fieldName] = ret
 			case "float32":
-				ret, _ := strconv.Atoi(colCell)
-				oneMapFields[fieldName] = ret
+				//ret, _ := strconv.Atoi(colCell)
+				//strconv.FormatFloat(float64, 'E', -1, 32)
+				ret, _ := strconv.ParseFloat(colCell, 32)
+				oneMapFields[fieldName] = float32(ret)
 			case "float64":
+				ret, _ := strconv.ParseFloat(colCell, 64)
+				oneMapFields[fieldName] = ret
 			case "string":
 				oneMapFields[fieldName] = colCell
 			case "[]int":
@@ -233,6 +237,8 @@ func GetFileList(path string) error {
 func ListFileFunc(p []string) {
 	for index, value := range p {
 		fmt.Println("Index = ", index, " Value = ", value)
-		Read(value, "ID")
+		if index == 0 {
+			Read(value, "ID")
+		}
 	}
 }
