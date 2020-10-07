@@ -54,8 +54,25 @@ func Load() {
 
 func LoadItem(path string) {
 	items := Read(path, "ID")
+
+	MapItems = items
+
 	fmt.Println("load table item !!!")
 	fmt.Println(items)
+
+	for key, value := range MapItems {
+		fmt.Println(reflect.TypeOf(key).String())
+		fmt.Println(value)
+	}
+
+	value, ok := MapItems["1"]
+	if !ok {
+		fmt.Println("value+++++++++++++++++++++")
+	}
+
+	fmt.Println(value)
+	fmt.Println(value["Name"])
+	fmt.Println(value["Names"])
 }
 
 func LoadEquip(path string) {
@@ -211,6 +228,8 @@ type BaseI interface {
 type EquipBase struct {
 	ItemBase
 }
+
+var MapItems map[interface{}]map[string]interface{}
 
 type ItemBase struct {
 	ID       int64
