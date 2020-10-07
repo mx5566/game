@@ -135,6 +135,7 @@ func Read(fileName string, keys ...string) map[interface{}]map[string]interface{
 	}
 
 	var mapFields = make(map[interface{}]map[string]interface{})
+	var mapFieldsBytes = make(map[interface{}][]byte)
 	var mapFieldNames = make(map[string]string)
 	var sliceFieldNames = []string{}
 	var sliceFieldTypes = []string{}
@@ -180,6 +181,7 @@ func Read(fileName string, keys ...string) map[interface{}]map[string]interface{
 		}
 
 		oneMapFields := make(map[string]interface{})
+		oneMapFieldsBytes := []byte{}
 		comKeys := []string{}
 		for index1, colCell := range row {
 			// 实际的值判断
@@ -220,6 +222,10 @@ func Read(fileName string, keys ...string) map[interface{}]map[string]interface{
 			}
 		}
 		//sort.Strings(comKeys)
+		oneMapFieldsBytes, err = json.Marshal(oneMapFields)
+		if err != nil {
+			log.Panic("json.Marshal table fileName error ", err)
+		}
 		mapFields[strings.Join(comKeys, "_")] = oneMapFields
 	}
 
