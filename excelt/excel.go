@@ -56,29 +56,26 @@ func Load() {
 func LoadItem(path string) {
 	items := Read(path, "ID")
 
-	MapItems = items
+	//MapItems = items
 
 	fmt.Println("load table item !!!")
 	fmt.Println(items)
 
-	for key, value := range MapItems {
-		fmt.Println(reflect.TypeOf(key).String())
+	MapItems = make(map[interface{}]ItemBase)
+	for key, value := range items {
+		///fmt.Println(reflect.TypeOf(key).String())
 
-		//MapItems[key] = json.Marshaler(value)
+		var itemBase  ItemBase
+		err := json.Unmarshal(value, &itemBase)
+		if err != nil {
+			fmt.Println("----------------------------------", err)
+			continue
+		}
+		//fmt.Println(itemBase)
 
-		fmt.Println(json.Marshal(value))
-
-		fmt.Println(value)
+		MapItems[key] = itemBase
+		//fmt.Println(value)
 	}
-
-	value, ok := MapItems["1"]
-	if !ok {
-		fmt.Println("value+++++++++++++++++++++")
-	}
-
-	fmt.Println(value)
-	fmt.Println(value["Name"])
-	fmt.Println(value["Names"])
 }
 
 func LoadEquip(path string) {
@@ -120,7 +117,7 @@ func CombineKeys(keys ...interface{}) string {
 	return strings.Join(com, "_")
 }
 
-func Read(fileName string, keys ...string) map[interface{}]map[string]interface{} {
+func Read(fileName string, keys ...string) map[interface{}][]byte {
 	f, err := excelize.OpenFile(fileName)
 	if err != nil {
 		println(err.Error())
@@ -227,11 +224,12 @@ func Read(fileName string, keys ...string) map[interface{}]map[string]interface{
 			log.Panic("json.Marshal table fileName error ", err)
 		}
 		mapFields[strings.Join(comKeys, "_")] = oneMapFields
+		mapFieldsBytes[strings.Join(comKeys, "_")] = oneMapFieldsBytes
 	}
 
 	//fmt.Println(mapFields)
 
-	return mapFields
+	return mapFieldsBytes
 }
 
 type BaseI interface {
@@ -241,7 +239,7 @@ type EquipBase struct {
 	ItemBase
 }
 
-var MapItems map[interface{}]map[string]interface{}
+var MapItems map[interface{}]ItemBase
 
 type ItemBase struct {
 	ID       int64    `json:"ID"`
