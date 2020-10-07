@@ -1,6 +1,7 @@
 package excelt
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/360EntSecGroup-Skylar/excelize"
 	"github.com/xiaonanln/goworld/engine/gwlog"
@@ -62,6 +63,11 @@ func LoadItem(path string) {
 
 	for key, value := range MapItems {
 		fmt.Println(reflect.TypeOf(key).String())
+
+		//MapItems[key] = json.Marshaler(value)
+
+		fmt.Println(json.Marshal(value))
+
 		fmt.Println(value)
 	}
 
@@ -232,14 +238,14 @@ type EquipBase struct {
 var MapItems map[interface{}]map[string]interface{}
 
 type ItemBase struct {
-	ID       int64
-	Name     string
-	Type     uint16
-	Quality  uint8
-	Ratio1   float32
-	Ratio2   float64
-	BufferID []int32
-	Names    []string
+	ID       int64    `json:"ID"`
+	Name     string   `json:"Name"`
+	Type     uint16   `json:"Type"`
+	Quality  uint8    `json:"Quality"`
+	Ratio1   float32  `json:"Ratio1"`
+	Ratio2   float64  `json:"Ratio2"`
+	BufferID []int32  `json:"BufferID"`
+	Names    []string `json:"Names"`
 }
 
 func Listfunc(path string, f os.FileInfo, err error) error {
