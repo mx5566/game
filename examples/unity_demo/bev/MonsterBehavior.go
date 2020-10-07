@@ -27,7 +27,7 @@ func (ai *MonsterBehavior) Start() {
 func (ai *MonsterBehavior) Update(dtime float32) {
 	//更新行为树
 	tree := GetBevTree()
-	tree.Print()
+	//tree.Print()
 
 	gwlog.Debugf("tree name %s", tree.GetTitile())
 

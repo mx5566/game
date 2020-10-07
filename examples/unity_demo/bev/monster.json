@@ -71,7 +71,7 @@
       "description": "",
       "properties": {
         "index": "id",
-        "typeName": "player"
+        "typeName": "Player"
       },
       "display": {
         "x": -24,

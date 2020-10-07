@@ -1,6 +1,7 @@
 package player
 
 import (
+	"fmt"
 	"github.com/xiaonanln/goworld/engine/common"
 	"github.com/xiaonanln/goworld/examples/unity_demo/bev"
 	mycommon "github.com/xiaonanln/goworld/examples/unity_demo/common"
@@ -37,6 +38,7 @@ func (monster *Monster) DescribeEntityType(desc *entity.EntityTypeDesc) {
 func (monster *Monster) OnCreated() {
 	monster.Entity.OnCreated()
 	monster.ai = bev.NewMonsterBehavior(monster)
+	gwlog.DebugfE("monster OnCreated ", monster.ID)
 }
 
 func (monster *Monster) OnEnterSpace() {
@@ -59,6 +61,7 @@ func (monster *Monster) setDefaultAttrs() {
 
 func (monster *Monster) AI() {
 	// 用behaviors3go来实现一个基本的ai模块判断
+	fmt.Println("monster Ai start")
 	dtime := float32(mycommon.FRAME_TIME) / float32(1000)
 	monster.ai.Update(dtime)
 
@@ -222,6 +225,7 @@ func (monster *Monster) GetNearestTarget(typeName string) *entity.Entity {
 }
 
 func (monster *Monster) Attack(id common.EntityID) bool {
+	gwlog.DebugfE("monster Attack ", id)
 	ent := monster.Space.GetEntity(id)
 	if ent == nil {
 		return false
@@ -245,11 +249,15 @@ func (monster *Monster) Attack(id common.EntityID) bool {
 }
 
 func (monster *Monster) Idle() {
+	gwlog.DebugfE("monster Idle ")
+
 	monster.Attrs.SetStr("action", "idle")
 	return
 }
 
 func (monster *Monster) Move(id common.EntityID) bool {
+	gwlog.DebugfE("monster Move ", id)
+
 	ent := monster.Space.GetEntity(id)
 	if ent == nil {
 		return false

@@ -18,6 +18,9 @@ func InitBev() {
 
 
 	bevMainTree = CreateBevTree(str + "/examples/unity_demo/bev/monster.json")
+	if bevMainTree == nil {
+		gwlog.DebugfE("CreateBevTree error-----------------------")
+	}
 
 	gwlog.Debugf("after ----------------- %s", bevMainTree.GetTitile())
 }

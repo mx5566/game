@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"github.com/xiaonanln/goworld"
 	"github.com/xiaonanln/goworld/examples/unity_demo/bev"
 	"github.com/xiaonanln/goworld/examples/unity_demo/player"
@@ -21,7 +20,7 @@ func main() {
 	goworld.RegisterEntity("Player", &player.Player{})
 
 	bev.InitBev()
-	fmt.Print("))))))))))))))))))))))))))))")
+	//fmt.Print("))))))))))))))))))))))))))))")
 
 	//excelt.Read("1.xlsx")
 	// 运行游戏服务器
