@@ -94,6 +94,7 @@ func Run() {
 	if logLevel == "" {
 		logLevel = gameConfig.LogLevel
 	}
+
 	binutil.SetupGWLog(fmt.Sprintf("game%d", gameid), logLevel, gameConfig.LogFile, gameConfig.LogStderr)
 
 	binutil.SetupGWLogEx(fmt.Sprintf("game%d", gameid), logLevel, gameConfig.LogFile, "game_err.log")

@@ -2,7 +2,6 @@
 package bev
 
 import (
-	"fmt"
 	b3 "github.com/magicsea/behavior3go"
 	b3config "github.com/magicsea/behavior3go/config"
 	b3core "github.com/magicsea/behavior3go/core"
@@ -338,15 +337,14 @@ func (this *FindTarget) Initialize(setting *b3config.BTNodeCfg) {
 	this.index = setting.GetPropertyAsString("index")
 	this.typeName = setting.GetPropertyAsString("typeName")
 
-	fmt.Println("Ai bev FindTarget Initialize -->", this.index, " ", this.typeName)
-
+	gwlog.DebugfE("Ai bev FindTarget Initialize --> %v %v", this.index, this.typeName)
 }
 
 func (this *FindTarget) OnTick(tick *b3core.Tick) b3.Status {
 	object := tick.GetTarget().(inter.IMonster)
 	tick.Blackboard.Set(this.index, "", "", "")
 
-	fmt.Println("Ai bev FindTarget OnTick -->", this.index, " ", this.typeName)
+	gwlog.DebugfE("Ai bev FindTarget OnTick --> %v %v", this.index, this.typeName)
 
 	nearestTarget := object.GetNearestTarget(this.typeName)
 	if nearestTarget == nil {
@@ -368,7 +366,7 @@ func (this *AttackTarget) Initialize(setting *b3config.BTNodeCfg) {
 	this.Action.Initialize(setting)
 	this.index = setting.GetPropertyAsString("index")
 
-	fmt.Println("Ai bev AttackTarget Initialize -->", this.index)
+	gwlog.DebugfE("Ai bev AttackTarget Initialize --> %v", this.index)
 
 }
 
@@ -379,7 +377,7 @@ func (this *AttackTarget) OnTick(tick *b3core.Tick) b3.Status {
 		return b3.FAILURE
 	}
 
-	fmt.Println("Ai bev AttackTarget OnTick -->", this.index)
+	gwlog.DebugfE("Ai bev AttackTarget OnTick --> %v", this.index)
 
 	ret := object.Attack(id)
 
@@ -400,8 +398,7 @@ func (this *MoveToTarget) Initialize(setting *b3config.BTNodeCfg) {
 	this.Action.Initialize(setting)
 	this.index = setting.GetPropertyAsString("index")
 
-	fmt.Println("Ai bev MoveToTarget Initialize -->", this.index)
-
+	gwlog.DebugfE("Ai bev MoveToTarget Initialize --> %v", this.index)
 }
 
 func (this *MoveToTarget) OnTick(tick *b3core.Tick) b3.Status {
@@ -411,7 +408,7 @@ func (this *MoveToTarget) OnTick(tick *b3core.Tick) b3.Status {
 		return b3.FAILURE
 	}
 
-	fmt.Println("Ai bev MoveToTarget OnTick id -->", id)
+	gwlog.DebugfE("Ai bev MoveToTarget OnTick --> %v", id)
 
 	ret := object.Move(id)
 

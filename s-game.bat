@@ -1,3 +1,3 @@
-.\examples\unity_demo\unity_demo.exe -gid=1 -log info &
+.\examples\unity_demo\unity_demo.exe -gid=1 -log debug &
 
 pause

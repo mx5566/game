@@ -256,22 +256,26 @@ func (monster *Monster) Idle() {
 }
 
 func (monster *Monster) Move(id common.EntityID) bool {
-	gwlog.DebugfE("monster Move ", id)
+	gwlog.DebugfE("monster Move1 %v", id)
 
 	ent := monster.Space.GetEntity(id)
 	if ent == nil {
 		return false
 	}
+	gwlog.DebugfE("monster Move2 %v", id)
 
-	if monster.IsInterestedIn(ent) {
+	if !monster.IsInterestedIn(ent) {
 		return false
 	}
+	gwlog.DebugfE("monster Move3 %v", id)
 
 	myPos := monster.GetPosition()
 	direction := ent.GetPosition().Sub(myPos)
 	direction.Y = 0
 
 	t := direction.Normalized().Mul(monster.GetSpeed() * 30 / 1000.0)
+	gwlog.DebugfE("monster SetPosition----------------- %v", id)
+
 	monster.SetPosition(myPos.Add(t))
 	monster.FaceTo(ent)
 

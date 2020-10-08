@@ -87,7 +87,7 @@ func rebuildLoggerFromCfgEx() {
 	// 最后创建具体的Logger
 	loggerEx = zap.New(core /*zap.AddCaller()*/) // 需要传入 zap.AddCaller() 才会显示打日志点的文件名和行数, 有点小坑
 
-	loggerEx.With(zap.String("source", sourceEx))
+	loggerEx.Sugar().With(zap.String("source", sourceEx))
 }
 
 // SetOutput sets the output writer
@@ -103,11 +103,11 @@ func SetOutputEx(outputs map[string]string) {
 
 	// 获取 info、warn日志文件的io.Writer 抽象 getWriter() 在下方实现
 	if _, ok := outputs["errFile"]; !ok {
-		outputs["errFile"] = sourceEx + ".log"
+		outputs["errFile"] = sourceEx + "_error.log"
 	}
 
 	if _, ok := outputs["logFile"]; !ok {
-		outputs["logFile"] = sourceEx + "_error.log"
+		outputs["logFile"] = sourceEx + ".log"
 	}
 	infoHook = getWriter(outputs["logFile"])
 	warnHook = getWriter(outputs["errFile"])
