@@ -1183,6 +1183,7 @@ func (e *Entity) GetPosition() Vector3 {
 
 // SetPosition sets the entity position
 func (e *Entity) SetPosition(pos Vector3) {
+	gwlog.DebugfE("Entity SetPosition %v %v", e.ID, e.TypeName)
 	e.setPositionYaw(pos, e.yaw, false)
 }
 
