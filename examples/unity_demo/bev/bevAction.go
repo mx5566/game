@@ -348,7 +348,6 @@ func (this *FindTarget) OnTick(tick *b3core.Tick) b3.Status {
 
 	fmt.Println("Ai bev FindTarget OnTick -->", this.index, " ", this.typeName)
 
-
 	nearestTarget := object.GetNearestTarget(this.typeName)
 	if nearestTarget == nil {
 		return b3.FAILURE
@@ -375,14 +374,14 @@ func (this *AttackTarget) Initialize(setting *b3config.BTNodeCfg) {
 
 func (this *AttackTarget) OnTick(tick *b3core.Tick) b3.Status {
 	object := tick.GetTarget().(inter.IMonster)
-	id := tick.Blackboard.Get(this.index, "", "").(string)
-	if id == "" {
+	id := tick.Blackboard.Get(this.index, "", "").(common.EntityID)
+	if id.IsNil() {
 		return b3.FAILURE
 	}
 
 	fmt.Println("Ai bev AttackTarget OnTick -->", this.index)
 
-	ret := object.Attack(common.EntityID(id))
+	ret := object.Attack(id)
 
 	if ret {
 		return b3.SUCCESS
@@ -413,7 +412,6 @@ func (this *MoveToTarget) OnTick(tick *b3core.Tick) b3.Status {
 	}
 
 	fmt.Println("Ai bev MoveToTarget OnTick id -->", id)
-
 
 	ret := object.Move(id)
 

@@ -61,9 +61,7 @@ func LoadItem(path string) {
 
 	MapItems = make(map[interface{}]ItemBase)
 	for key, value := range items {
-		///fmt.Println(reflect.TypeOf(key).String())
-
-		var itemBase  ItemBase
+		var itemBase ItemBase
 		err := json.Unmarshal(value, &itemBase)
 		if err != nil {
 			fmt.Println("load item table LoadItem err key [ ", key, "]  error [", err, " ]")
