@@ -342,7 +342,7 @@ func (this *FindTarget) Initialize(setting *b3config.BTNodeCfg) {
 
 func (this *FindTarget) OnTick(tick *b3core.Tick) b3.Status {
 	object := tick.GetTarget().(inter.IMonster)
-	tick.Blackboard.Set(this.index, "", "", "")
+	tick.Blackboard.Set(this.index, common.EntityID(""), "", "")
 
 	gwlog.DebugfE("Ai bev FindTarget OnTick --> %v %v", this.index, this.typeName)
 
