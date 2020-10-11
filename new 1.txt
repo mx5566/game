@@ -9,3 +9,5 @@ go test -v -test.run TestGWLog ./engine/gwlog/gwlogex.go ./engine/gwlog/gwlogex_
 go test -v -test.run TestGwExLog ./engine/gwlog/gwlogex.go ./engine/gwlog/gwlogex_test.go ./engine/gwlog/gwlog.go
 
 go test -v -test.run TestGetFileList ./excelt/excel_test.go   ./excelt/excel.go
+
+unity地图编辑导出数据
