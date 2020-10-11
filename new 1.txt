@@ -1,4 +1,4 @@
-go build ./cmd/goworld
+﻿go build ./cmd/goworld
 
 
 
@@ -13,3 +13,7 @@ go test -v -test.run TestGetFileList ./excelt/excel_test.go   ./excelt/excel.go
 unity地图编辑导出数据
 
 https://www.liangzl.com/get-article-detail-152582.html
+
+https://blog.csdn.net/abao2123/article/details/11862117
+
+unity 游戏场景数据导出
