@@ -44,7 +44,7 @@ func (space *MySpace) DumpEntityStatus() {
 
 func (space *MySpace) SummonMonsters() {
 	if space.CountEntities("Monster") < space.CountEntities("Player")*2 {
-		space.CreateEntity("Monster", entity.Vector3{})
+		space.CreateEntity("Monster", entity.Vector3{10.0, 0.0, 10.0})
 	}
 }
 

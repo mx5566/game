@@ -20,7 +20,6 @@ func main() {
 	goworld.RegisterEntity("Player", &player.Player{})
 
 	bev.InitBev()
-	//fmt.Print("))))))))))))))))))))))))))))")
 
 	//excelt.Read("1.xlsx")
 	// 运行游戏服务器
