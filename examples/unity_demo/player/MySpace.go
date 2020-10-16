@@ -34,6 +34,8 @@ func (space *MySpace) OnSpaceCreated() {
 	//for i := 0; i < M; i++ {
 	//	space.CreateEntity("Monster", entity.Vector3{})
 	//}
+
+	gwlog.TraceErrorEx("OnSpaceCreated")
 }
 
 func (space *MySpace) DumpEntityStatus() {

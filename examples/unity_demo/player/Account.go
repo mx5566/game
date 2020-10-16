@@ -118,6 +118,9 @@ func (a *Account) Login_Client(username string, password string) {
 			}
 			playerID := common.EntityID(_playerID)
 			goworld.LoadEntityAnywhere("Player", playerID)
+
+			gwlog.DebugfE("Login_Client spaceid[%d]", entity.GetEntity(playerID).Space.ID)
+
 			a.Call(playerID, "GetSpaceID", a.ID)
 		})
 	})
@@ -131,6 +134,8 @@ func (a *Account) OnGetPlayerSpaceID(playerID common.EntityID, spaceID common.En
 		a.onPlayerEntityFound(player)
 		return
 	}
+
+	gwlog.DebugfE("OnGetPlayerSpaceID %d", spaceID)
 
 	a.Attrs.SetStr("loginPlayerID", string(playerID))
 	a.EnterSpace(spaceID, entity.Vector3{})

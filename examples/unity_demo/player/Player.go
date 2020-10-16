@@ -12,7 +12,6 @@ import (
 	"strconv"
 )
 
-
 // Player 对象代表一名玩家
 type Player struct {
 	entity.Entity
@@ -64,6 +63,9 @@ func (p *Player) enterSpace(spaceKind int) {
 // OnClientConnected is called when client is connected
 func (a *Player) OnClientConnected() {
 	gwlog.Infof("%s client connected", a)
+
+	gwlog.TraceErrorEx("Player OnClientConnected")
+
 	a.enterSpace(int(a.GetInt("spaceKind")))
 }
 
