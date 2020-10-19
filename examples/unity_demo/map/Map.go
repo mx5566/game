@@ -1,7 +1,5 @@
 package _map
 
-import "github.com/xiaonanln/goworld/engine/entity"
-
 // map struct
 type Map struct {
 	Name       string `json:"name"`
@@ -17,8 +15,13 @@ type Map struct {
 type MapBlock struct {
 }
 
+type Position struct {
+	X int32
+	Y int32
+}
+
 // map object
 type MapObject struct {
-	ID  int64          `json:"id"`
-	Pos entity.Vector3 `json:"pos"`
+	ID  int64    `json:"id"`
+	Pos Position `json:"pos"`
 }
