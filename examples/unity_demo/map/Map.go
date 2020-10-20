@@ -11,13 +11,17 @@ type Map struct {
 	MapObjects []MapObject
 }
 
+func (this *Map) Init() {
+
+}
+
 // block struct
 type MapBlock struct {
 }
 
 type Position struct {
-	X int32
-	Y int32
+	X int32 `json:"x"`
+	Y int32 `json:"y"`
 }
 
 // map object
