@@ -1,6 +1,9 @@
 package insent
 
-import "strings"
+import (
+	"fmt"
+	"strings"
+)
 
 type Null struct{}
 
@@ -21,20 +24,31 @@ func (this *Insensitive) Init() {
 	}
 }
 
+// 日 本 人
+// 日 本 狗 东 西
+//
+
 //生成违禁词集合
 func (this *Insensitive) AddSensitiveToMap(set map[string]Null) {
 	for key := range set {
 		str := []rune(key)
 		nowMap := sensitiveWord
+
 		for i := 0; i < len(str); i++ {
 			if _, ok := nowMap[string(str[i])]; !ok { //如果该key不存在，
+
 				thisMap := make(map[string]interface{})
 				thisMap["isEnd"] = false
 				nowMap[string(str[i])] = thisMap
 				nowMap = thisMap
+
+				//fmt.Println("NO key2 ", nowMap, " sensitiveWord->", sensitiveWord)
+				fmt.Printf("3 sensitiveWord[%p]  &sensitiveWord[%p] nowMap[%p] &nowMap[%p]\n", sensitiveWord, &sensitiveWord, nowMap, &nowMap)
+
 			} else {
 				nowMap = nowMap[string(str[i])].(map[string]interface{})
 			}
+
 			if i == len(str)-1 {
 				nowMap["isEnd"] = true
 			}
@@ -42,6 +56,7 @@ func (this *Insensitive) AddSensitiveToMap(set map[string]Null) {
 	}
 }
 
+/*
 func CheckSensitiveWord(txt string,  beginIndex int,  matchType int) int{
 	//敏感词结束标识位：用于敏感词只有1位的情况
  	flag := false;
@@ -73,8 +88,7 @@ func CheckSensitiveWord(txt string,  beginIndex int,  matchType int) int{
 	matchFlag = 0;
 	}
 	return matchFlag;
-}
-
+}*/
 
 //敏感词汇转换为*
 func ChangeSensitiveWords(txt string, sensitive map[string]interface{}) (word string) {
@@ -117,3 +131,18 @@ func ChangeSensitiveWords(txt string, sensitive map[string]interface{}) (word st
 
 	return string(str)
 }
+
+/*
+func main() {
+	words := strings.Split(InvalidWords,",")
+	for _, v := range words {
+		InvalidWord[v] = Null{}
+	}
+	Set["你妈逼的"] = Null{}
+	Set["你妈"] = Null{}
+	Set["日"] = Null{}
+	AddSensitiveToMap(Set)
+	text := "文明用语你&* 妈,逼的你这个狗日的，怎么这么傻啊。我也是服了，我日,这些话我都说不出口"
+	fmt.Println(ChangeSensitiveWords(text,sensitiveWord))
+
+}*/
