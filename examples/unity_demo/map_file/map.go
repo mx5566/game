@@ -65,6 +65,9 @@ func (this *Map) IsHasBlockGrid(x, y int32) bool {
 	if x >= this.Width || y >= this.Height {
 		return true
 	}
+	if this.MapBlock[x][y] == 1 {
+		return true
+	}
 
 	return false
 }
@@ -78,6 +81,10 @@ func (this *Map) IsHasBlockPostion(x, y float64) bool {
 	width := int32(math.Floor(x / float64(this.TileWidth))) //float32(this.TileWidth * this.Width)
 	height := int32(math.Floor(x / float64(this.TileHeight)))
 	if width >= this.Width || height >= this.Height {
+		return true
+	}
+
+	if this.MapBlock[width][height] == 1 {
 		return true
 	}
 
