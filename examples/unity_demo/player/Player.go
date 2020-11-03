@@ -64,7 +64,7 @@ func (p *Player) enterSpace(spaceKind int) {
 func (a *Player) OnClientConnected() {
 	gwlog.Infof("%s client connected", a)
 
-	gwlog.TraceErrorEx("Player OnClientConnected")
+	gwlog.TraceErrorEx("Player OnClientConnected kind[%d]", int(a.GetInt("spaceKind")))
 
 	a.enterSpace(int(a.GetInt("spaceKind")))
 }
