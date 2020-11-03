@@ -8,7 +8,7 @@ import (
 )
 
 // map struct
-type Map struct {
+type MapInfo struct {
 	Name       string      `json:"name"`
 	Uid        string      `json:"uid"`
 	TileWidth  int32       `json:"tile_width"`
@@ -19,7 +19,7 @@ type Map struct {
 	MapObjects []MapObject `json:"objects"`
 }
 
-func (this *Map) Init(name string) error {
+func (this *MapInfo) Init(name string) error {
 	f, err := os.Open(name)
 	if err != nil {
 		return err
@@ -38,7 +38,7 @@ func (this *Map) Init(name string) error {
 	return nil
 }
 
-func (this *Map) Load(name string) error {
+func (this *MapInfo) Load(name string) error {
 	return nil
 }
 
@@ -53,11 +53,11 @@ type MapObject struct {
 	Pos Position `json:"pos"`
 }
 
-func (this *Map) LoadBlock() {
+func (this *MapInfo) LoadBlock() {
 
 }
 
-func (this *Map) IsHasBlockGrid(x, y int32) bool {
+func (this *MapInfo) IsHasBlockGrid(x, y int32) bool {
 	if x < 0 || y < 0 {
 		return true
 	}
@@ -72,7 +72,7 @@ func (this *Map) IsHasBlockGrid(x, y int32) bool {
 	return false
 }
 
-func (this *Map) IsHasBlockPostion(x, y float64) bool {
+func (this *MapInfo) IsHasBlockPostion(x, y float64) bool {
 	if x < 0 || y < 0 {
 		return true
 	}
@@ -94,4 +94,10 @@ func (this *Map) IsHasBlockPostion(x, y float64) bool {
 // load all map jsonfile
 func LoadAllMaps() {
 
+}
+
+type Map struct {
+	MapInfo
+	// all grid
+	Grids map[int]map[int]*Grid
 }
