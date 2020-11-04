@@ -6,6 +6,7 @@ import (
 
 type Grid struct {
 	pos Position
+	W   *Map
 }
 
 // PathNeighbors returns the neighbors of the tile, excluding blockers and
@@ -18,9 +19,12 @@ func (t *Grid) PathNeighbors() []astar.Pather {
 		{0, -1},
 		{0, 1},
 	} {
-		if n := t.W.Tile(t.pos.X+offset[0], t.pos.Y+offset[1]); n != nil &&
-			n.Kind != KindBlocker {
-			neighbors = append(neighbors, n)
+		x := t.pos.X + offset[0]
+		y := t.pos.Y + offset[1]
+		if n := t.W.Tile(x, y); n != nil {
+			if !n.W.IsHasBlockGrid(x, y) {
+				neighbors = append(neighbors, n)
+			}
 		}
 	}
 	return neighbors
@@ -28,19 +32,18 @@ func (t *Grid) PathNeighbors() []astar.Pather {
 
 // PathNeighborCost returns the movement cost of the directly neighboring tile.
 func (t *Grid) PathNeighborCost(to astar.Pather) float64 {
-	toT := to.(*Grid)
-	return KindCosts[toT.Kind]
+	return KindCosts[KindPlain]
 }
 
 // PathEstimatedCost uses Manhattan distance to estimate orthogonal distance
 // between non-adjacent nodes.
 func (t *Grid) PathEstimatedCost(to astar.Pather) float64 {
 	toT := to.(*Grid)
-	absX := toT.X - t.X
+	absX := toT.pos.X - t.pos.X
 	if absX < 0 {
 		absX = -absX
 	}
-	absY := toT.Y - t.Y
+	absY := toT.pos.Y - t.pos.Y
 	if absY < 0 {
 		absY = -absY
 	}

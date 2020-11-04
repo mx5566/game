@@ -134,7 +134,7 @@ func (space *Space) onSpaceCreated() {
 		}
 		nilSpace = space
 		nilSpace.Space = nilSpace
-		gwlog.Infof("Created nil space: %s", nilSpace)
+		gwlog.Infof("Created nil space: %s kind [%d]", nilSpace, space.Kind)
 		return
 	}
 }

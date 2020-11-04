@@ -7,6 +7,17 @@ import (
 	"os"
 )
 
+// Kind* constants refer to tile kinds for input and output.
+const (
+	// KindPlain (.) is a plain tile with a movement cost of 1.
+	KindPlain = iota
+)
+
+// KindCosts map tile kinds to movement costs.
+var KindCosts = map[int]float64{
+	KindPlain: 1.0,
+}
+
 // map struct
 type MapInfo struct {
 	Name       string      `json:"name"`
@@ -99,5 +110,30 @@ func LoadAllMaps() {
 type Map struct {
 	MapInfo
 	// all grid
-	Grids map[int]map[int]*Grid
+	Grids map[int32]map[int32]*Grid
+}
+
+func (m *Map) Init(mapInfo MapInfo) {
+	m.MapInfo = mapInfo
+	m.Grids = make(map[int32]map[int32]*Grid)
+
+}
+
+// Tile gets the tile at the given coordinates in the world.
+func (m *Map) Tile(x, y int32) *Grid {
+	if m.Grids[x] == nil {
+		return nil
+	}
+	return m.Grids[x][y]
+}
+
+// SetTile sets a tile at the given coordinates in the world.
+func (m *Map) SetTile(t *Grid, x, y int32) {
+	if m.Grids[x] == nil {
+		m.Grids[x] = map[int32]*Grid{}
+	}
+	m.Grids[x][y] = t
+	t.pos.X = x
+	t.pos.Y = y
+	t.W = m
 }
