@@ -119,7 +119,7 @@ func (a *Account) Login_Client(username string, password string) {
 			playerID := common.EntityID(_playerID)
 			goworld.LoadEntityAnywhere("Player", playerID)
 
-			gwlog.DebugfE("Login_Client spaceid[%d]", entity.GetEntity(playerID).Space.ID)
+			gwlog.DebugfE("Login_Client spaceid[%s] kind[%d]", entity.GetEntity(playerID).Space.ID, entity.GetEntity(playerID).Space.Kind)
 
 			a.Call(playerID, "GetSpaceID", a.ID)
 		})

@@ -225,7 +225,7 @@ func (monster *Monster) GetNearestTarget(typeName string) *entity.Entity {
 }
 
 func (monster *Monster) Attack(id common.EntityID) bool {
-	gwlog.DebugfE("monster Attack ", id)
+	//gwlog.DebugfE("monster Attack ", id)
 	ent := monster.Space.GetEntity(id)
 	if ent == nil {
 		return false
@@ -249,14 +249,14 @@ func (monster *Monster) Attack(id common.EntityID) bool {
 }
 
 func (monster *Monster) Idle() {
-	gwlog.DebugfE("monster Idle ")
+	//gwlog.DebugfE("monster Idle ")
 
 	monster.Attrs.SetStr("action", "idle")
 	return
 }
 
 func (monster *Monster) Move(id common.EntityID) bool {
-	gwlog.DebugfE("monster Move1 %v", id)
+	//gwlog.DebugfE("monster Move1 %v", id)
 
 	ent := monster.Space.GetEntity(id)
 	if ent == nil {
@@ -274,7 +274,7 @@ func (monster *Monster) Move(id common.EntityID) bool {
 	direction.Y = 0
 
 	t := direction.Normalized().Mul(monster.GetSpeed() * 30 / 1000.0)
-	gwlog.DebugfE("monster SetPosition----------------- %v", id)
+	//gwlog.DebugfE("monster SetPosition----------------- %v", id)
 
 	monster.SetPosition(myPos.Add(t))
 	monster.FaceTo(ent)

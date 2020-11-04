@@ -344,7 +344,7 @@ func (this *FindTarget) OnTick(tick *b3core.Tick) b3.Status {
 	object := tick.GetTarget().(inter.IMonster)
 	tick.Blackboard.Set(this.index, common.EntityID(""), "", "")
 
-	gwlog.DebugfE("Ai bev FindTarget OnTick --> %v %v", this.index, this.typeName)
+	//gwlog.DebugfE("Ai bev FindTarget OnTick --> %v %v", this.index, this.typeName)
 
 	nearestTarget := object.GetNearestTarget(this.typeName)
 	if nearestTarget == nil {
@@ -377,7 +377,7 @@ func (this *AttackTarget) OnTick(tick *b3core.Tick) b3.Status {
 		return b3.FAILURE
 	}
 
-	gwlog.DebugfE("Ai bev AttackTarget OnTick --> %v", this.index)
+	//gwlog.DebugfE("Ai bev AttackTarget OnTick --> %v", this.index)
 
 	ret := object.Attack(id)
 
@@ -408,7 +408,7 @@ func (this *MoveToTarget) OnTick(tick *b3core.Tick) b3.Status {
 		return b3.FAILURE
 	}
 
-	gwlog.DebugfE("Ai bev MoveToTarget OnTick --> %v", id)
+	//gwlog.DebugfE("Ai bev MoveToTarget OnTick --> %v", id)
 
 	ret := object.Move(id)
 
