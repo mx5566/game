@@ -5,3 +5,6 @@ SELECT table_schema AS "Database", ROUND(SUM(data_length + index_length) / 1024 
 
 mysqldump <parameters> | pv --progress --size 100m > dumpfile.sql
 利用pv显示进度
+
+圆的周长 
+	L=2pi * r

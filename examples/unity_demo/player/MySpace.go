@@ -2,6 +2,7 @@ package player
 
 import (
 	"github.com/xiaonanln/goworld/examples/unity_demo/common"
+	"github.com/xiaonanln/goworld/examples/unity_demo/map_file"
 	"strconv"
 	"time"
 
@@ -20,6 +21,9 @@ type MySpace struct {
 	goworld.Space // Space type should always inherit from entity.Space
 
 	destroyCheckTimer entity.EntityTimerID
+
+	// 地图信息 用来寻路阻挡判断
+	Map map_file.Map
 }
 
 // OnSpaceCreated is called when the space is created
@@ -34,8 +38,11 @@ func (space *MySpace) OnSpaceCreated() {
 	//for i := 0; i < M; i++ {
 	//	space.CreateEntity("Monster", entity.Vector3{})
 	//}
+	// 根据kind 找到对应的地图的配置静态的信息 阻挡 地图基本信息
 
-	gwlog.TraceError("OnSpaceCreated ------------------------------------kind[%d]", space.Kind)
+	space.Map.Init()
+
+	gwlog.TraceErrorEx("OnSpaceCreated ------------------------------------kind[%d]", space.Kind)
 }
 
 func (space *MySpace) DumpEntityStatus() {
@@ -112,6 +119,10 @@ func (space *MySpace) ConfirmRequestDestroy(ok bool) {
 		}
 		space.Destroy()
 	}
+}
+
+func (space *MySpace) FindPath(start, dest entity.Vector3) {
+
 }
 
 // OnGameReady is called when the game server is ready

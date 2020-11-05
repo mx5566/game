@@ -41,6 +41,7 @@ func (p Vector3) Mul(m Coord) Vector3 {
 	return Vector3{p.X * m, p.Y * m, p.Z * m}
 }
 
+// math.Pi * 角度 = 180° * 弧度
 // DirToYaw convert direction represented by Vector3 to Yaw
 func (dir Vector3) DirToYaw() Yaw {
 	dir.Normalize()

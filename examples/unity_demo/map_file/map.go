@@ -2,9 +2,11 @@ package map_file
 
 import (
 	"encoding/json"
+	"github.com/xiaonanln/goworld/engine/gwlog"
 	"io/ioutil"
 	"math"
 	"os"
+	"runtime"
 )
 
 // Kind* constants refer to tile kinds for input and output.
@@ -30,6 +32,10 @@ type MapInfo struct {
 	MapObjects []MapObject `json:"objects"`
 }
 
+func init() {
+	LoadAllMaps()
+}
+
 func (this *MapInfo) Init(name string) error {
 	f, err := os.Open(name)
 	if err != nil {
@@ -49,10 +55,6 @@ func (this *MapInfo) Init(name string) error {
 	return nil
 }
 
-func (this *MapInfo) Load(name string) error {
-	return nil
-}
-
 type Position struct {
 	X int32 `json:"x"`
 	Y int32 `json:"y"`
@@ -62,10 +64,6 @@ type Position struct {
 type MapObject struct {
 	ID  int64    `json:"id"`
 	Pos Position `json:"pos"`
-}
-
-func (this *MapInfo) LoadBlock() {
-
 }
 
 func (this *MapInfo) IsHasBlockGrid(x, y int32) bool {
@@ -104,7 +102,24 @@ func (this *MapInfo) IsHasBlockPostion(x, y float64) bool {
 
 // load all map jsonfile
 func LoadAllMaps() {
+	var m MapInfo
+	fileName := "./block.json"
+	err := m.Init(fileName)
+	if err != nil {
+		gwlog.PanicfE("load file err file[%s] [%s]", fileName, err.Error())
+	}
 
+	str, _ := os.Getwd()
+
+	ostype := runtime.GOOS // 获取系统类型
+	//fmt.Println("dir cwd ----------------- " + str + "  type  " + ostype)
+
+	if ostype == "windows" {
+		str += "\\log\\"
+
+	} else if ostype == "linux" {
+		str += "/log/"
+	}
 }
 
 type Map struct {
