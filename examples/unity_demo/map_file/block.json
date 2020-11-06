@@ -1,6 +1,7 @@
 {
 	"name": "Map1",
 	"uid": "123456",
+	"id": 1,
 	"tile_width": 40,
 	"tile_height": 40,
 	"width": 100,

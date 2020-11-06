@@ -40,7 +40,7 @@ func (space *MySpace) OnSpaceCreated() {
 	//}
 	// 根据kind 找到对应的地图的配置静态的信息 阻挡 地图基本信息
 
-	space.Map.Init()
+	//space.Map.Init()
 
 	gwlog.TraceErrorEx("OnSpaceCreated ------------------------------------kind[%d]", space.Kind)
 }

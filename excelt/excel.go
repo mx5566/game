@@ -4,10 +4,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/360EntSecGroup-Skylar/excelize"
+	"github.com/xiaonanln/goworld/engine/common"
+	"github.com/xiaonanln/goworld/engine/gwioutil"
 	"github.com/xiaonanln/goworld/engine/gwlog"
 	"log"
-	"os"
-	"path/filepath"
 	"reflect"
 	"regexp"
 	"runtime"
@@ -18,7 +18,6 @@ import (
 var (
 	ostype = runtime.GOOS // 获取系统类型
 )
-var listfile []string //获取文件列表
 var MapItem map[string]*ItemBase
 
 type TableRes interface {
@@ -33,7 +32,19 @@ func init() {
 
 func Load() {
 	var listpath = "."
-	_ = GetFileList(listpath)
+	if ostype == "windows" {
+		listpath += "\\excelt\\"
+	} else if ostype == "linux" {
+		listpath += "/excelt/"
+	}
+
+	var filter gwioutil.FileFilter
+	_ = filter.GetFileList(listpath, common.Xlsx)
+
+	list := filter.ListFile
+
+	gwlog.DebugfE("xlsx file load count[%v]", len(list))
+
 	pathHead := "excelt"
 
 	if ostype == "windows" {
@@ -41,7 +52,7 @@ func Load() {
 	} else if ostype == "linux" {
 		pathHead += "/"
 	}
-	for _, path := range listfile {
+	for _, path := range list {
 		switch path {
 		case pathHead + "equip.xlsx":
 			LoadEquip(path)
@@ -72,9 +83,9 @@ func LoadItem(path string) {
 }
 
 func LoadEquip(path string) {
-	equip := Read(path, "ID")
+	_ = Read(path, "ID")
 	fmt.Println("load table equip !!!")
-	fmt.Println(equip)
+	//fmt.Println(equip)
 
 }
 
@@ -85,13 +96,6 @@ func compressStr(str string) string {
 	//匹配一个或多个空白符的正则表达式
 	reg := regexp.MustCompile("\\s+")
 	return reg.ReplaceAllString(str, "")
-}
-
-func ReadAllXlsx(path string) {
-	err := GetFileList(path)
-	if err != nil {
-		return
-	}
 }
 
 func CombineKeys(keys ...interface{}) string {
@@ -220,8 +224,6 @@ func Read(fileName string, keys ...string) map[interface{}][]byte {
 		mapFieldsBytes[strings.Join(comKeys, "_")] = oneMapFieldsBytes
 	}
 
-	//fmt.Println(mapFields)
-
 	return mapFieldsBytes
 }
 
@@ -243,48 +245,6 @@ type ItemBase struct {
 	Ratio2   float64  `json:"Ratio2"`
 	BufferID []int32  `json:"BufferID"`
 	Names    []string `json:"Names"`
-}
-
-func Listfunc(path string, f os.FileInfo, err error) error {
-	var strRet string
-	/*strRet, _ = os.Getwd()
-
-	if ostype == "windows" {
-		strRet += "\\"
-	} else if ostype == "linux" {
-		strRet += "/"
-	}*/
-
-	if f == nil {
-		return err
-	}
-	if f.IsDir() {
-		return nil
-	}
-
-	strRet += path
-
-	//用strings.HasSuffix(src, suffix)//判断src中是否包含 suffix结尾
-	ok := strings.HasSuffix(strRet, ".xlsx")
-	if ok {
-
-		listfile = append(listfile, strRet) //将目录push到listfile []string中
-	}
-
-	return nil
-}
-
-func GetFileList(path string) error {
-	//var strRet string
-	err := filepath.Walk(path, Listfunc)
-
-	if err != nil {
-		fmt.Printf("filepath.Walk() returned %v\n", err)
-		gwlog.Fatalf("filepath.Walk() returned %v\n", err)
-		return err
-	}
-
-	return nil
 }
 
 func ListFileFunc(p []string) {

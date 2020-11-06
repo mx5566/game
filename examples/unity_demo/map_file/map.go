@@ -2,6 +2,9 @@ package map_file
 
 import (
 	"encoding/json"
+	"fmt"
+	"github.com/xiaonanln/goworld/engine/common"
+	"github.com/xiaonanln/goworld/engine/gwioutil"
 	"github.com/xiaonanln/goworld/engine/gwlog"
 	"io/ioutil"
 	"math"
@@ -20,10 +23,17 @@ var KindCosts = map[int]float64{
 	KindPlain: 1.0,
 }
 
+// 名字是key
+var MapBaseInfo = make(map[string]MapInfo)
+
+// Uid是key
+var MapBaseInfoID = make(map[string]MapInfo)
+
 // map struct
 type MapInfo struct {
 	Name       string      `json:"name"`
 	Uid        string      `json:"uid"`
+	ID         int32       `json:"id"`
 	TileWidth  int32       `json:"tile_width"`
 	TileHeight int32       `json:"tile_height"`
 	Width      int32       `json:"width"`
@@ -102,23 +112,36 @@ func (this *MapInfo) IsHasBlockPostion(x, y float64) bool {
 
 // load all map jsonfile
 func LoadAllMaps() {
-	var m MapInfo
-	fileName := "./block.json"
-	err := m.Init(fileName)
-	if err != nil {
-		gwlog.PanicfE("load file err file[%s] [%s]", fileName, err.Error())
+	ostype := runtime.GOOS // 获取系统类型
+
+	var splicing = ""
+	var str = ""
+	if ostype == "windows" {
+		splicing = "\\examples\\unity_demo\\map_file\\"
+		str = "examples\\unity_demo\\map_file\\"
+	} else if ostype == "linux" {
+		splicing = "/examples/unity_demo/map_file/"
+		str = "examples/unity_demo/map_file/"
 	}
 
-	str, _ := os.Getwd()
+	var listpath = "." + splicing
 
-	ostype := runtime.GOOS // 获取系统类型
-	//fmt.Println("dir cwd ----------------- " + str + "  type  " + ostype)
+	var filter gwioutil.FileFilter
+	_ = filter.GetFileList(listpath, common.Json)
 
-	if ostype == "windows" {
-		str += "\\log\\"
+	pathHead := str
 
-	} else if ostype == "linux" {
-		str += "/log/"
+	fmt.Println(pathHead)
+
+	var m MapInfo
+	for _, path := range filter.ListFile {
+		err := m.Init(path)
+		if err != nil {
+			gwlog.PanicfE("load file err file[%s] [%s]", path, err.Error())
+		}
+
+		MapBaseInfo[m.Name] = m
+		MapBaseInfoID[m.Uid] = m
 	}
 }
 
