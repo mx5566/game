@@ -2,7 +2,6 @@ package map_file
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/xiaonanln/goworld/engine/common"
 	"github.com/xiaonanln/goworld/engine/gwioutil"
 	"github.com/xiaonanln/goworld/engine/gwlog"
@@ -27,7 +26,7 @@ var KindCosts = map[int]float64{
 var MapBaseInfo = make(map[string]MapInfo)
 
 // Uid是key
-var MapBaseInfoID = make(map[string]MapInfo)
+var MapBaseInfoID = make(map[int32]MapInfo)
 
 // map struct
 type MapInfo struct {
@@ -38,12 +37,12 @@ type MapInfo struct {
 	TileHeight int32       `json:"tile_height"`
 	Width      int32       `json:"width"`
 	Height     int32       `json:"height"`
-	MapBlock   [][]int     `json:"blocks"`
+	MapBlock   [][]int32   `json:"blocks"`
 	MapObjects []MapObject `json:"objects"`
 }
 
 func init() {
-	LoadAllMaps()
+	LoadAllMapRes()
 }
 
 func (this *MapInfo) Init(name string) error {
@@ -111,17 +110,14 @@ func (this *MapInfo) IsHasBlockPostion(x, y float64) bool {
 }
 
 // load all map jsonfile
-func LoadAllMaps() {
+func LoadAllMapRes() {
 	ostype := runtime.GOOS // 获取系统类型
 
 	var splicing = ""
-	var str = ""
 	if ostype == "windows" {
 		splicing = "\\examples\\unity_demo\\map_file\\"
-		str = "examples\\unity_demo\\map_file\\"
 	} else if ostype == "linux" {
 		splicing = "/examples/unity_demo/map_file/"
-		str = "examples/unity_demo/map_file/"
 	}
 
 	var listpath = "." + splicing
@@ -129,9 +125,7 @@ func LoadAllMaps() {
 	var filter gwioutil.FileFilter
 	_ = filter.GetFileList(listpath, common.Json)
 
-	pathHead := str
-
-	fmt.Println(pathHead)
+	gwlog.DebugfE("map file load cout[%d]", len(filter.ListFile))
 
 	var m MapInfo
 	for _, path := range filter.ListFile {
@@ -141,7 +135,7 @@ func LoadAllMaps() {
 		}
 
 		MapBaseInfo[m.Name] = m
-		MapBaseInfoID[m.Uid] = m
+		MapBaseInfoID[m.ID] = m
 	}
 }
 
@@ -151,10 +145,16 @@ type Map struct {
 	Grids map[int32]map[int32]*Grid
 }
 
+// 初始化地图配置信息 A*Star
 func (m *Map) Init(mapInfo MapInfo) {
 	m.MapInfo = mapInfo
 	m.Grids = make(map[int32]map[int32]*Grid)
-
+	// 填充所有的格子 用于寻路
+	for y, row := range m.MapInfo.MapBlock {
+		for x, _ := range row {
+			m.SetTile(&Grid{}, int32(x), int32(y))
+		}
+	}
 }
 
 // Tile gets the tile at the given coordinates in the world.

@@ -23,7 +23,7 @@ type MySpace struct {
 	destroyCheckTimer entity.EntityTimerID
 
 	// 地图信息 用来寻路阻挡判断
-	Map map_file.Map
+	Map *map_file.Map
 }
 
 // OnSpaceCreated is called when the space is created
@@ -34,13 +34,11 @@ func (space *MySpace) OnSpaceCreated() {
 	goworld.CallServiceShardKey("SpaceService", strconv.Itoa(space.Kind), "NotifySpaceLoaded", space.Kind, space.ID)
 	space.AddTimer(time.Second*5, "DumpEntityStatus")
 	space.AddTimer(time.Second*5, "SummonMonsters")
-	//M := 10
-	//for i := 0; i < M; i++ {
-	//	space.CreateEntity("Monster", entity.Vector3{})
-	//}
-	// 根据kind 找到对应的地图的配置静态的信息 阻挡 地图基本信息
 
-	//space.Map.Init()
+	// 根据kind 找到对应的地图的配置静态的信息 阻挡 地图基本信息
+	// init map
+	space.Map = new(map_file.Map)
+	space.Map.Init(map_file.MapBaseInfoID[int32(space.Kind)])
 
 	gwlog.TraceErrorEx("OnSpaceCreated ------------------------------------kind[%d]", space.Kind)
 }
