@@ -22,7 +22,9 @@ type Monster struct {
 	attackCD       time.Duration
 	lastAttackTime time.Time
 
-	ai inter.IMonsterBehavior
+	// new
+	ai     inter.IMonsterBehavior
+	baseID int64
 }
 
 func (monster *Monster) DescribeEntityType(desc *entity.EntityTypeDesc) {
@@ -36,6 +38,7 @@ func (monster *Monster) DescribeEntityType(desc *entity.EntityTypeDesc) {
 
 func (monster *Monster) OnCreated() {
 	monster.Entity.OnCreated()
+
 	monster.ai = bev.NewMonsterBehavior(monster)
 	gwlog.DebugfE("monster OnCreated ", monster.ID)
 }
@@ -56,6 +59,10 @@ func (monster *Monster) setDefaultAttrs() {
 
 	monster.attackCD = time.Second
 	monster.lastAttackTime = time.Now()
+}
+
+func (monster *Monster) SetBaseID(id int64) {
+
 }
 
 func (monster *Monster) AI() {

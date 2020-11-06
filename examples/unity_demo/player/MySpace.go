@@ -40,7 +40,6 @@ func (space *MySpace) OnSpaceCreated() {
 	space.Map = new(map_file.Map)
 	space.Map.Init(map_file.MapBaseInfoID[int32(space.Kind)])
 
-	gwlog.TraceErrorEx("OnSpaceCreated ------------------------------------kind[%d]", space.Kind)
 }
 
 func (space *MySpace) DumpEntityStatus() {
