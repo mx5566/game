@@ -5,6 +5,7 @@ import (
 	"github.com/xiaonanln/goworld/examples/unity_demo/bev"
 	mycommon "github.com/xiaonanln/goworld/examples/unity_demo/common"
 	"github.com/xiaonanln/goworld/examples/unity_demo/inter"
+	"github.com/xiaonanln/goworld/excelt"
 	"strings"
 	"time"
 
@@ -19,12 +20,10 @@ type Monster struct {
 	attackingTarget *entity.Entity
 	lastTickTime    time.Time
 
-	attackCD       time.Duration
 	lastAttackTime time.Time
 
 	// new
-	ai     inter.IMonsterBehavior
-	baseID int64
+	ai inter.IMonsterBehavior
 }
 
 func (monster *Monster) DescribeEntityType(desc *entity.EntityTypeDesc) {
@@ -37,6 +36,8 @@ func (monster *Monster) DescribeEntityType(desc *entity.EntityTypeDesc) {
 }
 
 func (monster *Monster) OnCreated() {
+	// createEntity 里面基本数据已经预先加载完毕
+
 	monster.Entity.OnCreated()
 
 	monster.ai = bev.NewMonsterBehavior(monster)
@@ -45,6 +46,7 @@ func (monster *Monster) OnCreated() {
 
 func (monster *Monster) OnEnterSpace() {
 	monster.setDefaultAttrs()
+
 	monster.AddTimer(time.Millisecond*100, "AI")
 	monster.lastTickTime = time.Now()
 	monster.AddTimer(time.Millisecond*30, "Tick")
@@ -57,7 +59,6 @@ func (monster *Monster) setDefaultAttrs() {
 	monster.Attrs.SetDefaultInt("hp", 100)
 	monster.Attrs.SetDefaultStr("action", "idle")
 
-	monster.attackCD = time.Second
 	monster.lastAttackTime = time.Now()
 }
 
@@ -241,13 +242,30 @@ func (monster *Monster) Attack(id common.EntityID) bool {
 		return false
 	}
 
-	player := ent.I.(*Player)
-
-	monster.CallAllClients("DisplayAttack", ent.ID)
-
 	if ent.GetInt("hp") <= 0 {
 		return false
 	}
+
+	// 查表去获取表数据
+	npcBase := excelt.GetBase(excelt.NpcTableStr, monster.GetInt(common.BaseID))
+	// 没有找到对应的怪物ID
+	if npcBase == nil {
+		return false
+	}
+
+	now := time.Now()
+	// 攻击间隔判断 毫秒
+	delta := time.Duration(npcBase.(*excelt.NpcBase).AttackInter)
+	if now.Before(monster.lastAttackTime.Add(delta * time.Millisecond)) {
+		return false
+	}
+
+	// reset attacktime
+	monster.lastAttackTime = now
+
+	player := ent.I.(*Player)
+
+	monster.CallAllClients("DisplayAttack", ent.ID)
 
 	player.TakeDamage(monster.GetDamage())
 	monster.Attrs.SetStr("action", "attack")
@@ -268,19 +286,20 @@ func (monster *Monster) Move(id common.EntityID) bool {
 	if ent == nil {
 		return false
 	}
-	//gwlog.DebugfE("monster Move2 %v", id)
 
 	if !monster.IsInterestedIn(ent) {
 		return false
 	}
-	//gwlog.DebugfE("monster Move3 %v", id)
-
 	myPos := monster.GetPosition()
+	dest := ent.GetPosition()
+
+	// astar 寻路
+	paths := monster.Space.I.(*MySpace).FindPathA(myPos, dest)
+
 	direction := ent.GetPosition().Sub(myPos)
 	direction.Y = 0
 
 	t := direction.Normalized().Mul(monster.GetSpeed() * 30 / 1000.0)
-	//gwlog.DebugfE("monster SetPosition----------------- %v", id)
 
 	monster.SetPosition(myPos.Add(t))
 	monster.FaceTo(ent)

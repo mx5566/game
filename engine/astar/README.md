@@ -138,5 +138,20 @@ if !found {
 Authors
 -------
 
+```
+https://zhuanlan.zhihu.com/p/54510444
+http://www.cppblog.com/heath/archive/2013/05/04/199973.html
+https://blog.csdn.net/bawangjian123/article/details/79510867
+http://theory.stanford.edu/~amitp/GameProgramming/AStarComparison.html
+
+
+
 Michael Alexander <beefsack@gmail.com>
 Robin Ranjit Chauhan <robin@pathwayi.com>
+
+对于网格形式的图，有以下这些启发函数可以使用：
+
+如果图形中只允许朝上下左右四个方向移动，则可以使用曼哈顿距离（Manhattan distance）。
+如果图形中允许朝八个方向移动，则可以使用对角距离。
+如果图形中允许朝任何方向移动，则可以使用欧几里得距离（Euclidean distance）。
+```

@@ -44,8 +44,8 @@ type entityTimerInfo struct {
 type Entity struct {
 	ID                   common.EntityID
 	TypeName             string
-	I                    IEntity
-	V                    reflect.Value
+	I                    IEntity       // 是真正的实体类型，比如player、monster
+	V                    reflect.Value // 是真正的实体类型，比如player、monster的value类型
 	destroyed            bool
 	typeDesc             *EntityTypeDesc
 	Space                *Space

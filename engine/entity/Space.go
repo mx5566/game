@@ -178,6 +178,11 @@ func (space *Space) CreateEntity(typeName string, pos Vector3) {
 	createEntity(typeName, space, pos, "", nil)
 }
 
+//
+func (space *Space) CreateEntityByExternal(typeName string, pos Vector3, data map[string]interface{}) {
+	createEntity(typeName, space, pos, "", data)
+}
+
 // LoadEntity loads a entity of specified entityID to the space
 //
 // If the entity already exists on server, this call has no effect

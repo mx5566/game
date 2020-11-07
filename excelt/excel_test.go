@@ -14,3 +14,9 @@ func TestGetFileList(t *testing.T) {
 	_ = filter.GetFileList(listpath, ".xslx")
 	ListFileFunc(filter.ListFile)
 }
+
+func TestCombineKeys(t *testing.T) {
+	t.Log(CombineKeys(1, "key1", 100, "key2"))
+
+	//t.Log(reflect.TypeOf(nil).Name())
+}

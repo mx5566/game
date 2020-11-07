@@ -1,7 +1,9 @@
 package player
 
 import (
-	"github.com/xiaonanln/goworld/examples/unity_demo/common"
+	"github.com/xiaonanln/goworld/engine/astar"
+	"github.com/xiaonanln/goworld/engine/common"
+	mycommon "github.com/xiaonanln/goworld/examples/unity_demo/common"
 	"github.com/xiaonanln/goworld/examples/unity_demo/map_file"
 	"strconv"
 	"time"
@@ -50,7 +52,7 @@ func (space *MySpace) DumpEntityStatus() {
 
 func (space *MySpace) SummonMonsters() {
 	if space.CountEntities("Monster") < space.CountEntities("Player")*2 {
-		space.CreateEntity("Monster", entity.Vector3{10.0, 0.0, 10.0})
+		space.CreateEntityByExternal("Monster", entity.Vector3{10.0, 0.0, 10.0}, map[string]interface{}{common.BaseID: 1})
 	}
 }
 
@@ -118,8 +120,25 @@ func (space *MySpace) ConfirmRequestDestroy(ok bool) {
 	}
 }
 
-func (space *MySpace) FindPath(start, dest entity.Vector3) {
+func (space *MySpace) FindPathA(start, dest entity.Vector3) []*map_file.Grid {
+	xStartTile, yStartTile := int32(start.X/entity.Coord(space.Map.Width)), int32(start.Z/entity.Coord(space.Map.Height))
+	xDestTile, yDestTile := int32(dest.X/entity.Coord(space.Map.Width)), int32(dest.Z/entity.Coord(space.Map.Height))
 
+	s := space.Map.Grids[xStartTile][yStartTile]
+	e := space.Map.Grids[xDestTile][yDestTile]
+
+	// dist 就是图数据结构从a->b的边的权重累计
+	p, _, found := astar.Path(s, e)
+	if !found {
+		return nil
+	}
+
+	ret := []*map_file.Grid{}
+	for _, v := range p {
+		ret = append(ret, v.(*map_file.Grid))
+	}
+
+	return ret
 }
 
 // OnGameReady is called when the game server is ready
@@ -138,7 +157,7 @@ func checkServerStarted() {
 }
 
 func isAllServicesReady() bool {
-	for _, serviceName := range common.SERVICE_NAMES {
+	for _, serviceName := range mycommon.SERVICE_NAMES {
 		if !goworld.CheckServiceEntitiesReady(serviceName) {
 			gwlog.Infof("%s entities are not ready ...", serviceName)
 			return false

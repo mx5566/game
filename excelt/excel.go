@@ -15,19 +15,21 @@ import (
 	"strings"
 )
 
+//TODO 查找所有的TODO位置
 var (
 	ostype = runtime.GOOS // 获取系统类型
 )
-var MapItem map[string]*ItemBase
 
-type TableRes interface {
-	Get(key string)
-	GetInt(key int64)
-}
+// 所有表的预定义字符串
+var (
+	ItemTableStr  = "item"
+	EquipTableStr = "equip"
+	NpcTableStr   = "npc"
+)
 
 // 加载table
 func init() {
-	Load()
+	//Load()
 }
 
 func Load() {
@@ -52,41 +54,19 @@ func Load() {
 	} else if ostype == "linux" {
 		pathHead += "/"
 	}
+	// TODO 按照示例添加表
 	for _, path := range list {
 		switch path {
 		case pathHead + "equip.xlsx":
-			LoadEquip(path)
+			LoadEquipTable(path)
 		case pathHead + "item.xlsx":
-			LoadItem(path)
+			LoadItemTable(path)
+		case pathHead + "npc.xlsx":
+			LoadNpcTable(path)
 		default:
 			fmt.Println("error path " + path)
 		}
 	}
-}
-
-func LoadItem(path string) {
-	items := Read(path, "ID")
-
-	fmt.Println("load table item !!!")
-	//fmt.Println(items)
-
-	MapItems = make(map[interface{}]ItemBase)
-	for key, value := range items {
-		var itemBase ItemBase
-		err := json.Unmarshal(value, &itemBase)
-		if err != nil {
-			fmt.Println("load item table LoadItem err key [ ", key, "]  error [", err, " ]")
-			continue
-		}
-		MapItems[key] = itemBase
-	}
-}
-
-func LoadEquip(path string) {
-	_ = Read(path, "ID")
-	fmt.Println("load table equip !!!")
-	//fmt.Println(equip)
-
 }
 
 func compressStr(str string) string {
@@ -98,13 +78,16 @@ func compressStr(str string) string {
 	return reg.ReplaceAllString(str, "")
 }
 
+// 把key转换位字符串
 func CombineKeys(keys ...interface{}) string {
 	//sort.Strings(keys)
 	com := []string{}
 	for _, key := range keys {
 		switch key.(type) {
-		case int, int32, int64, int8, int16, uint, uint32, uint64, uint16, uint8:
-			com = append(com, reflect.ValueOf(key).String())
+		case int, int32, int64, int8, int16:
+			com = append(com, strconv.FormatInt(reflect.ValueOf(key).Int(), 10))
+		case uint, uint32, uint64, uint16, uint8:
+			com = append(com, strconv.FormatUint(reflect.ValueOf(key).Uint(), 10))
 		case string:
 			com = append(com, key.(string))
 		default:
@@ -227,14 +210,21 @@ func Read(fileName string, keys ...string) map[interface{}][]byte {
 	return mapFieldsBytes
 }
 
-type BaseI interface {
+func ListFileFunc(p []string) {
+	for index, value := range p {
+		fmt.Println("Index = ", index, " Value = ", value)
+		if index == 0 {
+			Read(value, "ID")
+		}
+	}
 }
 
-type EquipBase struct {
-	ItemBase
-}
+////////////////////////////////////////////////////////////////////////////////////////
+// 基本的表数据结构
 
-var MapItems map[interface{}]ItemBase
+var MapItemsBase map[interface{}]ItemBase
+var MapNpcBase map[interface{}]NpcBase
+var MapEquipsBase map[interface{}]ItemBase
 
 type ItemBase struct {
 	ID       int64    `json:"ID"`
@@ -247,11 +237,87 @@ type ItemBase struct {
 	Names    []string `json:"Names"`
 }
 
-func ListFileFunc(p []string) {
-	for index, value := range p {
-		fmt.Println("Index = ", index, " Value = ", value)
-		if index == 0 {
-			Read(value, "ID")
+type NpcBase struct {
+	ID          int64  `json:"ID"`
+	Name        string `json:"Name"`
+	Type        uint16 `json:"Type"`
+	Level       uint16 `json:"Level"`
+	Hp          int64  `json:"Hp"`
+	AttackInter int32  `json:"AttackInter"`
+}
+
+type EquipBase struct {
+	ItemBase
+	// external attr
+}
+
+////////////////////////////////////////////////////////////////////////////
+func LoadItemTable(path string) {
+	items := Read(path, "ID")
+
+	fmt.Println("load table item !!!")
+	//fmt.Println(items)
+
+	MapItemsBase = make(map[interface{}]ItemBase)
+	for key, value := range items {
+		var itemBase ItemBase
+		err := json.Unmarshal(value, &itemBase)
+		if err != nil {
+			fmt.Println("load item table LoadItem err key [ ", key, "]  error [", err, " ]")
+			continue
 		}
+		MapItemsBase[key] = itemBase
 	}
+}
+
+func LoadEquipTable(path string) {
+	_ = Read(path, "ID")
+	fmt.Println("load table equip !!!")
+	//fmt.Println(equip)
+
+}
+
+func LoadNpcTable(path string) {
+	npcs := Read(path, "ID")
+
+	fmt.Println("load table item !!!")
+	//fmt.Println(items)
+
+	MapNpcBase = make(map[interface{}]NpcBase)
+	for key, value := range npcs {
+		var npcBase NpcBase
+		err := json.Unmarshal(value, &npcBase)
+		if err != nil {
+			fmt.Println("load item table LoadItem err key [ ", key, "]  error [", err, " ]")
+			continue
+		}
+		MapNpcBase[key] = npcBase
+	}
+}
+
+// TODO: 需要加入对用的表返回
+func GetBase(name string, keys ...interface{}) interface{} {
+	if len(name) == 0 {
+		return nil
+	}
+
+	keyCom := CombineKeys(keys)
+	switch name {
+	case ItemTableStr:
+		if base, ok := MapItemsBase[keyCom]; ok {
+			return &base
+		}
+	case EquipTableStr:
+		if base, ok := MapEquipsBase[keyCom]; ok {
+			return &base
+		}
+	case NpcTableStr:
+		if base, ok := MapNpcBase[keyCom]; ok {
+			return &base
+		}
+	default:
+		gwlog.ErrorfE("GetBase Error name %s", name)
+	}
+
+	return nil
 }

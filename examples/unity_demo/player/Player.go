@@ -174,5 +174,7 @@ func (player *Player) TakeDamage(damage int64) {
 		// now player dead ...
 		player.Attrs.SetStr("action", "death")
 		player.SetClientSyncing(false)
+		// triggle server logic
+		// onDead
 	}
 }
