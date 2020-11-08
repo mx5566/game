@@ -41,7 +41,7 @@ func (monster *Monster) OnCreated() {
 	monster.Entity.OnCreated()
 
 	monster.ai = bev.NewMonsterBehavior(monster)
-	gwlog.DebugfE("monster OnCreated ", monster.ID)
+	gwlog.DebugfE("monster OnCreated %s %d", monster.ID, monster.GetInt(common.BaseID))
 }
 
 func (monster *Monster) OnEnterSpace() {
@@ -294,9 +294,9 @@ func (monster *Monster) Move(id common.EntityID) bool {
 	dest := ent.GetPosition()
 
 	// astar 寻路
-	paths := monster.Space.I.(*MySpace).FindPathA(myPos, dest)
+	//paths := monster.Space.I.(*MySpace).FindPathA(myPos, dest)
 
-	direction := ent.GetPosition().Sub(myPos)
+	direction := dest.Sub(myPos)
 	direction.Y = 0
 
 	t := direction.Normalized().Mul(monster.GetSpeed() * 30 / 1000.0)

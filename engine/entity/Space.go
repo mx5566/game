@@ -260,11 +260,11 @@ func (space *Space) move(entity *Entity, newPos Vector3) {
 		return
 	}
 
-	gwlog.TraceErrorEx("space move %v %v", entity.ID, entity.TypeName)
+	//gwlog.TraceErrorEx("space move %v %v", entity.ID, entity.TypeName)
 
 	entity.Position = newPos
 	space.aoiMgr.Moved(&entity.aoi, aoi.Coord(newPos.X), aoi.Coord(newPos.Z))
-	gwlog.Debugf("%s: %s move to %v", space, entity, newPos)
+	gwlog.DebugfE("%s: %s move to %v", space, entity, newPos)
 }
 
 // OnEntityEnterSpace is called when entity enters space
