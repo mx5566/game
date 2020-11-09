@@ -128,7 +128,7 @@ func (monster *Monster) Tick() {
 }
 
 func (monster *Monster) GetSpeed() entity.Coord {
-	return 2
+	return 10
 }
 
 func (monster *Monster) GetAttackRange() entity.Coord {
@@ -250,6 +250,7 @@ func (monster *Monster) Attack(id common.EntityID) bool {
 	npcBase := excelt.GetBase(excelt.NpcTableStr, monster.GetInt(common.BaseID))
 	// 没有找到对应的怪物ID
 	if npcBase == nil {
+		//gwlog.DebugfE("monster attack npcBase not find ........")
 		return false
 	}
 

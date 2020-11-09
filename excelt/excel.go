@@ -81,6 +81,7 @@ func compressStr(str string) string {
 // 把key转换位字符串
 func CombineKeys(keys ...interface{}) string {
 	//sort.Strings(keys)
+	fmt.Println(keys)
 	com := []string{}
 	for _, key := range keys {
 		switch key.(type) {
@@ -91,7 +92,7 @@ func CombineKeys(keys ...interface{}) string {
 		case string:
 			com = append(com, key.(string))
 		default:
-			fmt.Println("unkonw type " + reflect.TypeOf(key).String())
+			fmt.Println("unkonw type " + reflect.TypeOf(key).String(), " ", key)
 		}
 	}
 	return strings.Join(com, "_")
@@ -301,6 +302,7 @@ func GetBase(name string, keys ...interface{}) interface{} {
 		return nil
 	}
 
+	gwlog.DebugfE("GetBase name[%s] key[%v]", name, keys)
 	keyCom := CombineKeys(keys)
 	switch name {
 	case ItemTableStr:
