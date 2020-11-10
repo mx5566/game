@@ -92,7 +92,26 @@ func CombineKeys(keys ...interface{}) string {
 		case string:
 			com = append(com, key.(string))
 		default:
-			fmt.Println("unkonw type " + reflect.TypeOf(key).String(), " ", key)
+			fmt.Println("unkonw type "+reflect.TypeOf(key).String(), " ", key)
+		}
+	}
+	return strings.Join(com, "_")
+}
+
+// 把key转换位字符串
+func CombineKeysEx(keys []interface{}) string {
+	//sort.Strings(keys)
+	com := []string{}
+	for _, key := range keys {
+		switch key.(type) {
+		case int, int32, int64, int8, int16:
+			com = append(com, strconv.FormatInt(reflect.ValueOf(key).Int(), 10))
+		case uint, uint32, uint64, uint16, uint8:
+			com = append(com, strconv.FormatUint(reflect.ValueOf(key).Uint(), 10))
+		case string:
+			com = append(com, key.(string))
+		default:
+			gwlog.ErrorfE("unkonw type %s  key %v", reflect.TypeOf(key).String(), key)
 		}
 	}
 	return strings.Join(com, "_")
@@ -239,12 +258,13 @@ type ItemBase struct {
 }
 
 type NpcBase struct {
-	ID          int64  `json:"ID"`
-	Name        string `json:"Name"`
-	Type        uint16 `json:"Type"`
-	Level       uint16 `json:"Level"`
-	Hp          int64  `json:"Hp"`
-	AttackInter int32  `json:"AttackInter"`
+	ID             int64   `json:"ID"`
+	Name           string  `json:"Name"`
+	Type           uint16  `json:"Type"`
+	Level          uint16  `json:"Level"`
+	Hp             int64   `json:"Hp"`
+	AttackInter    int32   `json:"AttackInter"`
+	AttackDistance float32 `json:"AttackDistance"`
 }
 
 type EquipBase struct {
@@ -303,7 +323,7 @@ func GetBase(name string, keys ...interface{}) interface{} {
 	}
 
 	gwlog.DebugfE("GetBase name[%s] key[%v]", name, keys)
-	keyCom := CombineKeys(keys)
+	keyCom := CombineKeysEx(keys)
 	switch name {
 	case ItemTableStr:
 		if base, ok := MapItemsBase[keyCom]; ok {

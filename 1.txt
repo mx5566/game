@@ -8,3 +8,4 @@ mysqldump <parameters> | pv --progress --size 100m > dumpfile.sql
 
 圆的周长 
 	L=2pi * r
+	

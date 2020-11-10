@@ -25,4 +25,5 @@ type IMonster interface {
 	GetNearestTarget(typeName string) *entity.Entity
 	Attack(id common.EntityID) bool
 	Idle()
+	CheckDistance(id common.EntityID) int
 }

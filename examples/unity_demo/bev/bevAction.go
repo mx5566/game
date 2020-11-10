@@ -433,3 +433,57 @@ func (this *Idle) OnTick(tick *b3core.Tick) b3.Status {
 	object.Idle()
 	return b3.SUCCESS
 }
+
+// check distance
+type CheckDistance struct {
+	b3core.Condition
+	index string
+}
+
+/*
+	// ENTER
+	this._enter(tick)
+
+	// OPEN
+	if !tick.Blackboard.GetBool("isOpen", tick.tree.id, this.id) {
+		this._open(tick)
+	}
+
+	// TICK
+	var status = this._tick(tick)
+
+	// CLOSE
+	if status != b3.RUNNING {
+		this._close(tick)
+	}
+
+	// EXIT
+	this._exit(tick)
+*/
+func (this *CheckDistance) Initialize(setting *b3config.BTNodeCfg) {
+	this.Condition.Initialize(setting)
+	this.index = setting.GetPropertyAsString("index")
+
+	gwlog.DebugfE("Ai bev CheckDistance Initialize --> %v", this.index)
+}
+
+// 成功代表二者的距离大于某个值
+// 失败代表二者的距离小于等于某个值
+// 错误是参数之类的错误、程序内部的逻辑的不确定性错误
+func (this *CheckDistance) OnTick(tick *b3core.Tick) b3.Status {
+	object := tick.GetTarget().(inter.IMonster)
+
+	id := tick.Blackboard.Get(this.index, "", "").(common.EntityID)
+	if id.IsNil() {
+		return b3.ERROR
+	}
+
+	ret := object.CheckDistance(id)
+	if ret == 3 {
+		return b3.ERROR
+	} else if ret == 2 {
+		return b3.SUCCESS
+	} else {
+		return b3.FAILURE
+	}
+}

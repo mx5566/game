@@ -250,7 +250,6 @@ func (monster *Monster) Attack(id common.EntityID) bool {
 	npcBase := excelt.GetBase(excelt.NpcTableStr, monster.GetInt(common.BaseID))
 	// 没有找到对应的怪物ID
 	if npcBase == nil {
-		//gwlog.DebugfE("monster attack npcBase not find ........")
 		return false
 	}
 
@@ -307,4 +306,33 @@ func (monster *Monster) Move(id common.EntityID) bool {
 
 	monster.Attrs.SetStr("action", "move")
 	return true
+}
+
+// 3 异常错误
+// 2 对象距离大于设定的距离
+// 1 距离小于等于设定的距离
+func (monster *Monster) CheckDistance(id common.EntityID) int {
+	ent := monster.Space.GetEntity(id)
+	if ent == nil {
+		return 3
+	}
+
+	myPos := monster.GetPosition()
+	dest := ent.GetPosition()
+
+	// 查表去获取表数据
+	npcBase := excelt.GetBase(excelt.NpcTableStr, monster.GetInt(common.BaseID))
+	// 没有找到对应的怪物ID
+	if npcBase == nil {
+		return 3
+	}
+
+	dis := float32(myPos.DistanceTo(dest))
+	// 二者的距离大于配置的距离
+	if dis > npcBase.(*excelt.NpcBase).AttackDistance {
+		return 2
+	}
+
+	// <=
+	return 1
 }
