@@ -33,7 +33,7 @@ type Monster struct {
 
 // last move to target
 type TargetEntity struct {
-	Target       entity.IEntity   // move to target
+	Target       *entity.Entity   // move to target
 	LastMoveTime time.Time        // last move time
 	Paths        []*map_file.Grid // last find path record
 }
@@ -315,6 +315,11 @@ func (monster *Monster) Move(id common.EntityID) bool {
 	myPos := monster.GetPosition()
 	dest := ent.GetPosition()
 
+	// 二者的距离小于某个值
+	if myPos.DistanceTo(dest) < 0.9 {
+		return false
+	}
+
 	// astar 寻路
 	paths := monster.Space.I.(*MySpace).FindPathA(myPos, dest)
 	if paths == nil || len(paths) == 0 {
@@ -334,6 +339,8 @@ func (monster *Monster) Move(id common.EntityID) bool {
 		if len(paths) > 0 {
 			grid = paths[0]
 			dest = map_file.GridToPos(grid.Pos, &monster.Space.I.(*MySpace).Map.MapInfo)
+		} else {
+			return false
 		}
 	}
 
@@ -346,6 +353,14 @@ func (monster *Monster) Move(id common.EntityID) bool {
 	monster.FaceTo(ent)
 
 	monster.Attrs.SetStr("action", "move")
+
+	var target TargetEntity
+	target.LastMoveTime = time.Now()
+	target.Paths = paths
+	target.Target = ent
+
+	monster.moveTarget = &target
+
 	return true
 }
 
