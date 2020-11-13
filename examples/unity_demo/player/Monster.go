@@ -5,6 +5,7 @@ import (
 	"github.com/xiaonanln/goworld/examples/unity_demo/bev"
 	mycommon "github.com/xiaonanln/goworld/examples/unity_demo/common"
 	"github.com/xiaonanln/goworld/examples/unity_demo/inter"
+	"github.com/xiaonanln/goworld/examples/unity_demo/map_file"
 	"github.com/xiaonanln/goworld/excelt"
 	"strings"
 	"time"
@@ -21,9 +22,20 @@ type Monster struct {
 	lastTickTime    time.Time
 
 	lastAttackTime time.Time
+	lastMoveTime   time.Time
 
 	// new
 	ai inter.IMonsterBehavior
+
+	// last move target
+	moveTarget *TargetEntity
+}
+
+// last move to target
+type TargetEntity struct {
+	Target       entity.IEntity   // move to target
+	LastMoveTime time.Time        // last move time
+	Paths        []*map_file.Grid // last find path record
 }
 
 func (monster *Monster) DescribeEntityType(desc *entity.EntityTypeDesc) {
@@ -60,6 +72,7 @@ func (monster *Monster) setDefaultAttrs() {
 	monster.Attrs.SetDefaultStr("action", "idle")
 
 	monster.lastAttackTime = time.Now()
+	monster.lastMoveTime = time.Now()
 }
 
 func (monster *Monster) SetBaseID(id int64) {
@@ -290,11 +303,39 @@ func (monster *Monster) Move(id common.EntityID) bool {
 	if !monster.IsInterestedIn(ent) {
 		return false
 	}
+
+	if ent.GetInt("hp") <= 0 {
+		return false
+	}
+
+	if monster.Hp() <= 0 {
+		return false
+	}
+
 	myPos := monster.GetPosition()
 	dest := ent.GetPosition()
 
 	// astar 寻路
-	//paths := monster.Space.I.(*MySpace).FindPathA(myPos, dest)
+	paths := monster.Space.I.(*MySpace).FindPathA(myPos, dest)
+	if paths == nil || len(paths) == 0 {
+		return false
+	}
+
+	// *map_file.Grid
+	grid := paths[0]
+	gwlog.DebugfE("move grid %v %v", grid, map_file.GridToPos(grid.Pos, &monster.Space.I.(*MySpace).Map.MapInfo))
+
+	// 覆盖
+	dest = map_file.GridToPos(grid.Pos, &monster.Space.I.(*MySpace).Map.MapInfo)
+
+	if myPos.DistanceTo(dest) < 0.9 {
+		paths = paths[1:]
+
+		if len(paths) > 0 {
+			grid = paths[0]
+			dest = map_file.GridToPos(grid.Pos, &monster.Space.I.(*MySpace).Map.MapInfo)
+		}
+	}
 
 	direction := dest.Sub(myPos)
 	direction.Y = 0

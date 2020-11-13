@@ -121,8 +121,13 @@ func (space *MySpace) ConfirmRequestDestroy(ok bool) {
 }
 
 func (space *MySpace) FindPathA(start, dest entity.Vector3) []*map_file.Grid {
-	xStartTile, yStartTile := int32(start.X/entity.Coord(space.Map.Width)), int32(start.Z/entity.Coord(space.Map.Height))
-	xDestTile, yDestTile := int32(dest.X/entity.Coord(space.Map.Width)), int32(dest.Z/entity.Coord(space.Map.Height))
+	xStartTile, yStartTile := map_file.PosToGrid(start, &space.Map.MapInfo)
+	xDestTile, yDestTile := map_file.PosToGrid(dest, &space.Map.MapInfo)
+
+	// 防止越界
+	if !space.Map.IsValidPosition(xStartTile, yStartTile) || !space.Map.IsValidPosition(xDestTile, yDestTile) {
+		return nil
+	}
 
 	s := space.Map.Grids[xStartTile][yStartTile]
 	e := space.Map.Grids[xDestTile][yDestTile]

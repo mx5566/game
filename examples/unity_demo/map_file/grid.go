@@ -5,7 +5,7 @@ import (
 )
 
 type Grid struct {
-	pos Position
+	Pos Position
 	W   *Map
 }
 
@@ -19,8 +19,8 @@ func (t *Grid) PathNeighbors() []astar.Pather {
 		{0, -1},
 		{0, 1},
 	} {
-		x := t.pos.X + offset[0]
-		y := t.pos.Y + offset[1]
+		x := t.Pos.X + offset[0]
+		y := t.Pos.Y + offset[1]
 		if n := t.W.Tile(x, y); n != nil {
 			if !n.W.IsHasBlockGrid(x, y) {
 				neighbors = append(neighbors, n)
@@ -39,11 +39,11 @@ func (t *Grid) PathNeighborCost(to astar.Pather) float64 {
 // between non-adjacent nodes.
 func (t *Grid) PathEstimatedCost(to astar.Pather) float64 {
 	toT := to.(*Grid)
-	absX := toT.pos.X - t.pos.X
+	absX := toT.Pos.X - t.Pos.X
 	if absX < 0 {
 		absX = -absX
 	}
-	absY := toT.pos.Y - t.pos.Y
+	absY := toT.Pos.Y - t.Pos.Y
 	if absY < 0 {
 		absY = -absY
 	}
