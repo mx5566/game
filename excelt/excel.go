@@ -244,7 +244,7 @@ func ListFileFunc(p []string) {
 
 var MapItemsBase map[interface{}]ItemBase
 var MapNpcBase map[interface{}]NpcBase
-var MapEquipsBase map[interface{}]ItemBase
+var MapEquipsBase map[interface{}]EquipBase
 
 type ItemBase struct {
 	ID       int64    `json:"ID"`
