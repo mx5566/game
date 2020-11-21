@@ -8,6 +8,7 @@ import (
 	"github.com/xiaonanln/goworld/engine/consts"
 	"github.com/xiaonanln/goworld/engine/entity"
 	"github.com/xiaonanln/goworld/engine/gwlog"
+	"github.com/xiaonanln/goworld/examples/unity_demo/skill"
 	"github.com/xiaonanln/goworld/proto"
 	"strconv"
 )
@@ -15,6 +16,8 @@ import (
 // Player 对象代表一名玩家
 type Player struct {
 	entity.Entity
+
+	mgr *skill.SkillMgr
 }
 
 func (a *Player) DescribeEntityType(desc *entity.EntityTypeDesc) {
@@ -31,6 +34,7 @@ func (a *Player) DescribeEntityType(desc *entity.EntityTypeDesc) {
 func (a *Player) OnCreated() {
 	a.Entity.OnCreated()
 	a.setDefaultAttrs()
+	//mgr.
 }
 
 // setDefaultAttrs 设置玩家的一些默认属性
@@ -177,4 +181,10 @@ func (player *Player) TakeDamage(damage int64) {
 		// triggle server logic
 		// onDead
 	}
+}
+
+func (player *Player) UserSkill_Client() {
+	skillID := 10001
+	targetID := 1001
+
 }

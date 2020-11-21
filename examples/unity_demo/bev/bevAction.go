@@ -487,3 +487,75 @@ func (this *CheckDistance) OnTick(tick *b3core.Tick) b3.Status {
 		return b3.FAILURE
 	}
 }
+
+// 血量检测
+type HpgteCondition struct {
+	b3core.Condition
+}
+
+func (this *HpgteCondition) Initialize(setting *b3config.BTNodeCfg) {
+	this.Condition.Initialize(setting)
+
+	gwlog.DebugfE("Ai bev CheckHpgt Initialize")
+}
+
+func (this *HpgteCondition) OnTick(tick *b3core.Tick) b3.Status {
+	object := tick.GetTarget().(inter.IMonster)
+	if object == nil {
+		return b3.FAILURE
+	}
+
+	if ret := object.CheckHpgte(); ret {
+		return b3.SUCCESS
+	} else {
+		return b3.FAILURE
+	}
+}
+
+// 血量检测
+type HpltCondition struct {
+	b3core.Condition
+}
+
+func (this *HpltCondition) Initialize(setting *b3config.BTNodeCfg) {
+	this.Condition.Initialize(setting)
+
+	gwlog.DebugfE("Ai bev CheckHpgt Initialize")
+}
+
+func (this *HpltCondition) OnTick(tick *b3core.Tick) b3.Status {
+	object := tick.GetTarget().(inter.IMonster)
+	if object == nil {
+		return b3.FAILURE
+	}
+
+	if ret := object.CheckHplt(); ret {
+		return b3.SUCCESS
+	} else {
+		return b3.FAILURE
+	}
+}
+
+// flee
+type FleeAction struct {
+	b3core.Action
+}
+
+func (this *FleeAction) Initialize(setting *b3config.BTNodeCfg) {
+	this.Action.Initialize(setting)
+
+	gwlog.DebugfE("Ai bev CheckHpgt Initialize")
+}
+
+func (this *FleeAction) OnTick(tick *b3core.Tick) b3.Status {
+	object := tick.GetTarget().(inter.IMonster)
+	if object == nil {
+		return b3.FAILURE
+	}
+
+	if ret := object.Flee(); ret {
+		return b3.SUCCESS
+	} else {
+		return b3.FAILURE
+	}
+}

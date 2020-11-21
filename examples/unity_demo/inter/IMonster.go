@@ -26,4 +26,7 @@ type IMonster interface {
 	Attack(id common.EntityID) bool
 	Idle()
 	CheckDistance(id common.EntityID) int
+	CheckHpgte() bool
+	CheckHplt() bool
+	Flee() bool
 }

@@ -317,7 +317,7 @@ func (monster *Monster) Move(id common.EntityID) bool {
 
 	// 二者的距离小于某个值
 	if myPos.DistanceTo(dest) < 0.9 {
-		return false
+		return true
 	}
 
 	// astar 寻路
@@ -391,4 +391,38 @@ func (monster *Monster) CheckDistance(id common.EntityID) int {
 
 	// <=
 	return 1
+}
+
+func (monster *Monster) CheckHpgte() bool {
+
+	hp := monster.Hp()
+
+	npcBase := excelt.GetBase(excelt.NpcTableStr, monster.GetInt(common.BaseID))
+	// 没有找到对应的怪物ID
+	if npcBase == nil {
+		return false
+	}
+
+	base := int64(100) // npcBase.(*excelt.NpcBase).AttackDistance
+
+	return hp >= base
+}
+
+func (monster *Monster) CheckHplt() bool {
+	hp := monster.Hp()
+
+	npcBase := excelt.GetBase(excelt.NpcTableStr, monster.GetInt(common.BaseID))
+	// 没有找到对应的怪物ID
+	if npcBase == nil {
+		return false
+	}
+
+	base := int64(100) // npcBase.(*excelt.NpcBase).AttackDistance
+
+	return hp < base
+}
+
+func (monster *Monster) Flee() bool {
+
+	return true
 }
