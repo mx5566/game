@@ -25,6 +25,7 @@ var (
 	ItemTableStr  = "item"
 	EquipTableStr = "equip"
 	NpcTableStr   = "npc"
+	SkillTableStr = "skill"
 )
 
 // 加载table
