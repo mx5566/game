@@ -12,7 +12,7 @@ type Skill struct {
 }
 
 func (skill *Skill) DescribeEntityType(desc *entity.EntityTypeDesc) {
-	desc.SetUseAOI(true, 100)
+	desc.SetUseAOI(true, 100).SetPersistent(true)
 	desc.DefineAttr("name", "Client")
 	desc.DefineAttr("lv", "Client", "persistent")
 	desc.DefineAttr("id", "Client", "persistent")
@@ -40,5 +40,5 @@ func (skill *Skill) Upgrade() bool {
 }
 
 func (skill *Skill) Save() {
-
+	skill.Entity.Save()
 }

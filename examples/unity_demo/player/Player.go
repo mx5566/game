@@ -184,7 +184,7 @@ func (player *Player) TakeDamage(damage int64) {
 }
 
 func (player *Player) UserSkill_Client() {
-	skillID := 10001
-	targetID := 1001
+	//skillID := 10001
+	//targetID := 1001
 
 }

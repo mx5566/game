@@ -75,6 +75,10 @@ func CreateEntityLocally(typeName string) *Entity {
 	return entity.CreateEntityLocally(typeName, nil)
 }
 
+func CreateEntityLocallyByExternal(typeName string, data map[string]interface{}) *Entity {
+	return entity.CreateEntityLocally(typeName, data)
+}
+
 // CreateEntitySomewhere creates a entity on any server
 func CreateEntityAnywhere(typeName string) EntityID {
 	return entity.CreateEntitySomewhere(0, typeName)

@@ -8,7 +8,7 @@ import (
 
 //
 type SkillMgr struct {
-	Skills map[uint64]*Skill
+	Skills map[uint64]*goworld.Entity
 	Owner  inter.IPlayer
 }
 
@@ -26,7 +26,8 @@ func (this *SkillMgr) LearnSkill(skillID uint64) {
 		return
 	}
 
-	skill = goworld.CreateEntityLocally("Skill") // 创建一个Player对象然后立刻销毁，产生一次存盘
+	skill = goworld.CreateEntityLocallyByExternal("Skill", map[string]interface{}{common.BaseID: 1})
+	this.Skills[skillID] = skill
 
 }
 
@@ -35,6 +36,8 @@ func (this *SkillMgr) UpgradeSkill(skillID uint64) {
 	if !ok {
 		return
 	}
+
+	entityID := skill.ID
 
 	skill.Upgrade()
 }
