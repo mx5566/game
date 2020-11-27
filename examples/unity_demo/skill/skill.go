@@ -15,13 +15,18 @@ func (skill *Skill) DescribeEntityType(desc *entity.EntityTypeDesc) {
 	desc.SetUseAOI(true, 100).SetPersistent(true)
 	desc.DefineAttr("name", "Client")
 	desc.DefineAttr("lv", "Client", "persistent")
-	desc.DefineAttr("id", "Client", "persistent")
+	desc.DefineAttr(common.BaseID, "Client", "persistent")
 }
 
 func (skill *Skill) OnCreated() {
 	skill.Entity.OnCreated()
+	skill.setDefaultAttrs()
 
 	gwlog.DebugfE("skill OnCreated %s %d", skill.ID, skill.GetInt(common.BaseID))
+}
+
+func (skill *Skill) SetBaseID() {
+
 }
 
 func (skill *Skill) setDefaultAttrs() {
@@ -34,8 +39,11 @@ func (skill *Skill) Upgrade() bool {
 		return false
 	}
 
+	// is max level
+	skill.Attrs.SetInt("lv", skill.Attrs.GetInt("lv")+1)
+
 	// save
-	skill.Save()
+	// skill.Save()
 	return true
 }
 

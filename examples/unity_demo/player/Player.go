@@ -34,7 +34,10 @@ func (a *Player) DescribeEntityType(desc *entity.EntityTypeDesc) {
 func (a *Player) OnCreated() {
 	a.Entity.OnCreated()
 	a.setDefaultAttrs()
-	//mgr.
+	a.mgr = new(skill.SkillMgr)
+	a.mgr.Owner = a
+
+	gwlog.DebugfE("Player OnCreated type[%s]", a.mgr.Owner.(*Player).TypeName)
 }
 
 // setDefaultAttrs 设置玩家的一些默认属性

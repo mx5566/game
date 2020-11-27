@@ -11,6 +11,6 @@ import "github.com/xiaonanln/goworld/engine/entity"
 @Description:
 */
 
-type IPlayer struct {
+type IPlayer interface {
 	entity.IEntity
 }

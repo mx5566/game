@@ -12,10 +12,6 @@ type SkillMgr struct {
 	Owner  inter.IPlayer
 }
 
-func (this *SkillMgr) Init() {
-
-}
-
 func (this *SkillMgr) UseSkill(skillID uint64, targetID common.EntityID) {
 
 }
@@ -37,7 +33,7 @@ func (this *SkillMgr) UpgradeSkill(skillID uint64) {
 		return
 	}
 
-	entityID := skill.ID
+	s := skill.I.(*Skill)
 
-	skill.Upgrade()
+	s.Upgrade()
 }

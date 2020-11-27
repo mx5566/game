@@ -2,6 +2,6 @@ package inter
 
 import "github.com/xiaonanln/goworld/engine/entity"
 
-type IObject struct {
+type IObject interface {
 	entity.IEntity
 }
