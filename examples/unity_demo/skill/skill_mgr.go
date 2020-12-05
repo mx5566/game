@@ -16,15 +16,14 @@ func (this *SkillMgr) UseSkill(skillID uint64, targetID common.EntityID) {
 
 }
 
-func (this *SkillMgr) LearnSkill(skillID uint64) {
-	skill, ok := this.Skills[skillID]
+func (this *SkillMgr) LearnSkill(skillBaseID uint64) {
+	skill, ok := this.Skills[skillBaseID]
 	if ok {
 		return
 	}
 
-	skill = goworld.CreateEntityLocallyByExternal("Skill", map[string]interface{}{common.BaseID: 1})
-	this.Skills[skillID] = skill
-
+	skill = goworld.CreateEntityLocallyByExternal("Skill", map[string]interface{}{common.BaseID: skillBaseID})
+	this.Skills[skillBaseID] = skill
 }
 
 func (this *SkillMgr) UpgradeSkill(skillID uint64) {
