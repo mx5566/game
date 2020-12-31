@@ -87,7 +87,7 @@ func rebuildLoggerFromCfgEx() {
 	// 最后创建具体的Logger
 	loggerEx = zap.New(core /*zap.AddCaller()*/) // 需要传入 zap.AddCaller() 才会显示打日志点的文件名和行数, 有点小坑
 
-	loggerEx.Sugar().With(zap.String("source", sourceEx))
+	loggerEx = loggerEx.With(zap.String("source", sourceEx))
 }
 
 // SetOutput sets the output writer
