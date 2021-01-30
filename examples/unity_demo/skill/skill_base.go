@@ -94,6 +94,47 @@ type FanShapedSkill struct {
 	Angle  float64
 }
 
+func (this *FanShapedSkill)changeXYToPolarCoordinate(p Point, r *float64, angle *float64) {
+	*r = math.Sqrt(p.X*p.Y + p.Y*p.Y);//半径
+	*angle = math.Atan2(p.Y , p.X) * float64(180) / math.Pi;//计算出来的是弧度，转成角度，atan2的范围是-π到π之间
+
+	a := *angle + float64(360)
+	*angle = a - math.Floor(math.Mod(a, float64(360))) * float64(360)
+}
+
+
+
+func (this *FanShapedSkill)changeAbsolute2Relative( originPoint,  changePoint Point) Point{
+	var rePoint Point
+	rePoint.X = changePoint.X - originPoint.X;
+	rePoint.Y = changePoint.Y - originPoint.Y;
+	return rePoint;
+}
+
+
+double baseR, baseAngle;
+CPoint rePoint = changeAbsolute2Relative(attackerPoint, defenserPoint);//图中B点的相对坐标
+changeXYToPolarCoordinate(rePoint, baseR, baseAngle);//转变成极坐标，baseAngle是角度
+for(SeqCPoint::iterator iter = otherRoles.begin();
+iter != otherRoles.end();
+iter ++)
+{
+CPoint rePointC = changeAbsolute2Relative(attackerPoint, iter2);//图中C点相对坐标
+double cr = 0;//极坐标半径
+double cangle = 0;//极坐标角度
+changeXYToPolarCoordinate(rePointC, cr, cangle);
+if (cr > R)//超过技能半径就无法攻击到了
+{
+continue;
+}
+if ( abs(cangle - baseAngle) < β/2 )//相差的角度小于配置的角度，所以受到攻击。要注意，这里的角度都是在0°到360°之间
+{
+//受到攻击
+}
+}
+
+
+
 // https://blog.csdn.net/u012175089/article/details/51048998
 // https://blog.csdn.net/u012175089/article/details/50857990
 // https://blog.csdn.net/u012175089/article/details/50850250
