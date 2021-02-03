@@ -11,3 +11,7 @@ message RegisterAccountReq {
 	string UserName = 1;
 	string Password = 2;
 }
+
+message UseSkillReq {
+    uint32 SkillID = 1;
+}

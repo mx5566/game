@@ -12,7 +12,6 @@ type Skill struct {
 }
 
 func (skill *Skill) DescribeEntityType(desc *entity.EntityTypeDesc) {
-	desc.SetUseAOI(true, 100).SetPersistent(true)
 	desc.DefineAttr("name", "Client")
 	desc.DefineAttr("lv", "Client", "persistent")
 	desc.DefineAttr(common.BaseID, "Client", "persistent")
@@ -27,6 +26,10 @@ func (skill *Skill) OnCreated() {
 
 func (skill *Skill) SetBaseID() {
 
+}
+
+func (skill *Skill) GetBaseID() int64 {
+	return skill.GetInt(common.BaseID)
 }
 
 func (skill *Skill) setDefaultAttrs() {

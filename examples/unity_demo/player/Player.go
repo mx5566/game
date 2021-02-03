@@ -28,6 +28,7 @@ func (a *Player) DescribeEntityType(desc *entity.EntityTypeDesc) {
 	desc.DefineAttr("hpmax", "AllClients")
 	desc.DefineAttr("action", "AllClients")
 	desc.DefineAttr("spaceKind", "Persistent")
+	desc.DefineAttr("skillId", "Persistent")
 }
 
 // OnCreated 在Player对象创建后被调用
@@ -36,6 +37,8 @@ func (a *Player) OnCreated() {
 	a.setDefaultAttrs()
 	a.mgr = new(skill.SkillMgr)
 	a.mgr.Owner = a
+
+	// 技能怎么load
 
 	gwlog.DebugfE("Player OnCreated type[%s]", a.mgr.Owner.(*Player).TypeName)
 }
@@ -48,6 +51,10 @@ func (a *Player) setDefaultAttrs() {
 	a.Attrs.SetDefaultInt("hp", 100)
 	a.Attrs.SetDefaultInt("hpmax", 100)
 	a.Attrs.SetDefaultStr("action", "idle")
+
+	skills := new(entity.ListAttr)
+	skills.AppendStr("100001")
+	a.Attrs.SetDefaultListAttr("skillId", skills)
 
 	a.SetClientSyncing(true)
 }
@@ -187,7 +194,8 @@ func (player *Player) TakeDamage(damage int64) {
 }
 
 func (player *Player) UserSkill_Client() {
-	//skillID := 10001
-	//targetID := 1001
+	// skillID := 10001
+	// targetID := 1001
+	// targetID不存在就是直接空放
 
 }

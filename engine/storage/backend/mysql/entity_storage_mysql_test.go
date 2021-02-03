@@ -11,7 +11,7 @@ import (
 )
 
 func TestMySQLEntityStorage(t *testing.T) {
-	pwd := "testmysql"
+	pwd := "123456"
 	if os.Getenv("TRAVIS") != "" {
 		pwd = ""
 	}

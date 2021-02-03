@@ -1,14 +1,12 @@
 package skill
 
-import "math"
+import (
+	"github.com/xiaonanln/goworld/engine/entity"
+	"math"
+)
 
-type Point struct {
-	X float64
-	Y float64
-}
-
-func Distance(src, dest Point) float64 {
-	return math.Sqrt(math.Pow(src.X-dest.X, src.Y-dest.Y))
+func Distance(src, dest entity.Vector3) float64 {
+	return math.Sqrt(math.Pow(float64(src.X-dest.X), float64(src.Y-dest.Y)))
 }
 
 // p2p类型技能
@@ -16,11 +14,11 @@ type PointSkill struct {
 	Distance float64
 }
 
-func (this *PointSkill) IsInDistance(src, dest Point) bool {
+func (this *PointSkill) IsInDistance(src, dest entity.Vector3) bool {
 	x := src.X - dest.Y
 	y := src.X - dest.Y
 
-	if x*x+y*y > this.Distance*this.Distance {
+	if float64(x*x+y*y) > this.Distance*this.Distance {
 		return false
 	}
 
@@ -32,11 +30,11 @@ type CircleSkill struct {
 	Distance float64
 }
 
-func (this *CircleSkill) IsInDistance(src, dest Point) bool {
+func (this *CircleSkill) IsInDistance(src, dest entity.Vector3) bool {
 	x := src.X - dest.Y
 	y := src.X - dest.Y
 
-	if x*x+y*y > this.Distance*this.Distance {
+	if float64(x*x+y*y) > this.Distance*this.Distance {
 		return false
 	}
 
@@ -49,16 +47,16 @@ type RectSkill struct {
 	Height float64
 }
 
-func (this *RectSkill) isInRect(minx, miny, maxx, maxy float64, point Point) bool {
+func (this *RectSkill) isInRect(minx, miny, maxx, maxy float64, point entity.Vector3) bool {
 	//判断点point的xy是否在矩形上下左右之间
-	if point.X >= minx && point.X <= maxx && point.Y >= miny && point.Y <= maxy {
+	if float64(point.X) >= minx && float64(point.X) <= maxx && float64(point.Y) >= miny && float64(point.Y) <= maxy {
 		return true
 	}
 
 	return false
 }
 
-func (this *RectSkill) ChangeAbsolute2Relative(originPoint, directionPoint, changePoint Point) (ret Point) {
+func (this *RectSkill) ChangeAbsolute2Relative(originPoint, directionPoint, changePoint entity.Vector3) (ret entity.Vector3) {
 	if originPoint == directionPoint {
 		ret.X = changePoint.X - originPoint.X
 		ret.Y = changePoint.Y - originPoint.Y
@@ -70,14 +68,14 @@ func (this *RectSkill) ChangeAbsolute2Relative(originPoint, directionPoint, chan
 	b := Distance(changePoint, originPoint)
 	c := Distance(directionPoint, originPoint)
 
-	cosA := (b*b + c*c - a*a) / 2 * b * c //余弦
-	ret.X = b * cosA                      //相对坐标x
-	ret.Y = math.Sqrt(b*b - ret.X*ret.X)  //相对坐标y
+	cosA := (b*b + c*c - a*a) / 2 * b * c                       //余弦
+	ret.X = entity.Coord(b * cosA)                              //相对坐标x
+	ret.Y = entity.Coord(math.Sqrt(b*b - float64(ret.X*ret.X))) //相对坐标y
 
 	return
 }
 
-func (this *RectSkill) IsInRect(originPoint, directionPoint, changePoint Point) bool {
+func (this *RectSkill) IsInRect(originPoint, directionPoint, changePoint entity.Vector3) bool {
 	//检测每一个角色是否在矩形内。
 	ret := this.ChangeAbsolute2Relative(originPoint, directionPoint, changePoint) //相对坐标
 	//skillWidth为图中宽度，skillLong为图中长度
@@ -94,46 +92,75 @@ type FanShapedSkill struct {
 	Angle  float64
 }
 
-func (this *FanShapedSkill)changeXYToPolarCoordinate(p Point, r *float64, angle *float64) {
-	*r = math.Sqrt(p.X*p.Y + p.Y*p.Y);//半径
-	*angle = math.Atan2(p.Y , p.X) * float64(180) / math.Pi;//计算出来的是弧度，转成角度，atan2的范围是-π到π之间
+func (this *FanShapedSkill) ChangeXYToPolarCoordinate(p entity.Vector3) (r float64, angle float64) {
+	r = math.Sqrt(float64(p.X*p.Y + p.Y*p.Y))                               //半径
+	angle = math.Atan2(float64(p.Y), float64(p.X)) * float64(180) / math.Pi //计算出来的是弧度，转成角度，atan2的范围是-π到π之间
 
-	a := *angle + float64(360)
-	*angle = a - math.Floor(math.Mod(a, float64(360))) * float64(360)
+	a := angle + float64(360)
+	angle = a - math.Floor(math.Mod(a, float64(360)))*float64(360)
+	return
 }
 
-
-
-func (this *FanShapedSkill)changeAbsolute2Relative( originPoint,  changePoint Point) Point{
-	var rePoint Point
-	rePoint.X = changePoint.X - originPoint.X;
-	rePoint.Y = changePoint.Y - originPoint.Y;
-	return rePoint;
+//|
+//|
+//|朝向 direction
+//|位置 position
+//|-----------
+func (this *FanShapedSkill) ChangeAbsolute2Relative(originPoint, directionPoint entity.Vector3) entity.Vector3 {
+	var rePoint entity.Vector3
+	rePoint.X = directionPoint.X - originPoint.X
+	rePoint.Y = directionPoint.Y - originPoint.Y
+	return rePoint
 }
 
+// a-> 根据朝向获取目标列表
+func (this *FanShapedSkill) IsInShape(attackerPoint, targetPoint, directionPoint entity.Vector3) bool {
 
-double baseR, baseAngle;
-CPoint rePoint = changeAbsolute2Relative(attackerPoint, defenserPoint);//图中B点的相对坐标
-changeXYToPolarCoordinate(rePoint, baseR, baseAngle);//转变成极坐标，baseAngle是角度
-for(SeqCPoint::iterator iter = otherRoles.begin();
-iter != otherRoles.end();
-iter ++)
-{
-CPoint rePointC = changeAbsolute2Relative(attackerPoint, iter2);//图中C点相对坐标
-double cr = 0;//极坐标半径
-double cangle = 0;//极坐标角度
-changeXYToPolarCoordinate(rePointC, cr, cangle);
-if (cr > R)//超过技能半径就无法攻击到了
-{
-continue;
-}
-if ( abs(cangle - baseAngle) < β/2 )//相差的角度小于配置的角度，所以受到攻击。要注意，这里的角度都是在0°到360°之间
-{
-//受到攻击
-}
+	// 根据攻击点和朝向得到范围
+	rePoint := this.ChangeAbsolute2Relative(attackerPoint, directionPoint)
+	rePoint.Normalize()
+
+	rePoint.Mul(entity.Coord(this.Radius))
+	_, angle := this.ChangeXYToPolarCoordinate(rePoint)
+
+	rePoint = this.ChangeAbsolute2Relative(attackerPoint, targetPoint)
+
+	r1, angle1 := this.ChangeXYToPolarCoordinate(rePoint)
+
+	if r1 > this.Radius {
+		return false
+	}
+
+	if math.Abs(angle1-angle) > this.Angle/2 {
+		return false
+	}
+
+	return true
 }
 
+// 叉积
+func (this *FanShapedSkill) IsInShapeByMul(attackerPoint, targetPoint, directionPoint entity.Vector3) bool {
+	// 先算半径
+	dis := float64(attackerPoint.DistanceTo(targetPoint))
+	if dis > this.Radius {
+		return false
+	}
 
+	// 根据攻击点和朝向得到范围
+	rePoint := this.ChangeAbsolute2Relative(attackerPoint, directionPoint)
+	rePoint.Normalize()
+
+	rePointTarget := this.ChangeAbsolute2Relative(attackerPoint, targetPoint)
+	rePointTarget.Normalize()
+
+	jiaodu := math.Acos(float64(rePoint.X*rePointTarget.X+rePoint.Y*rePointTarget.Y)) * 180 / math.Pi // 夹角大小
+
+	if jiaodu > this.Angle/2 {
+		return false
+	}
+
+	return true
+}
 
 // https://blog.csdn.net/u012175089/article/details/51048998
 // https://blog.csdn.net/u012175089/article/details/50857990

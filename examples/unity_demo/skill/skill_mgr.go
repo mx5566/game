@@ -12,6 +12,11 @@ type SkillMgr struct {
 	Owner  inter.IPlayer
 }
 
+func (this *SkillMgr) Load() {
+	// load skill entity
+	// playerID$1001
+}
+
 func (this *SkillMgr) UseSkill(skillID uint64, targetID common.EntityID) {
 
 }

@@ -56,6 +56,12 @@ func (a *Account) Register_Client(registerParam []byte) {
 	})
 }
 
+// create role
+func (a *Account) CreateRole_Client(name string, sex uint8, class uint8) {
+	//
+
+}
+
 // Register_Client 是处理玩家注册请求的RPC函数
 /*func (a *Account) Register_Client(username string, password string) {
 	gwlog.Debugf("Register %s %s", username, password)
@@ -109,6 +115,25 @@ func (a *Account) Login_Client(username string, password string) {
 			a.CallClient("ShowError", "Invalid password or username") // 密码错误
 			return
 		}
+
+		// 返回角色列表
+		/*goworld.GetKVDB("roles$"+username, func(val string, err error) {
+			if err != nil {
+				a.logIn = false
+				a.CallClient("ShowError", "Server Error："+err.Error()) // 服务器错误
+				return
+			}
+
+			// 没有角色
+			if val == "" {
+				a.CallClient("ShowRoleList", "")
+				return
+			}
+
+			// roles := strings.Split(val, "|")
+			// 加载所有的角色 获取属性数据 返回给客户端
+			// 挺难用的数据库这一块
+		})*/
 
 		goworld.GetKVDB("playerID$"+username, func(_playerID string, err error) {
 			if err != nil {
