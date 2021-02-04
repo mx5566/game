@@ -261,7 +261,7 @@ func createEntity(typeName string, space *Space, pos Vector3, entityID common.En
 		entity.setupSaveTimer()
 	}
 
-	dispatchercluster.SendNotifyCreateEntity(entityID)
+	_ = dispatchercluster.SendNotifyCreateEntity(entityID)
 
 	gwlog.Debugf("Entity %s created.", entity)
 	gwutils.RunPanicless(func() {

@@ -28,7 +28,7 @@ func (a *Player) DescribeEntityType(desc *entity.EntityTypeDesc) {
 	desc.DefineAttr("hpmax", "AllClients")
 	desc.DefineAttr("action", "AllClients")
 	desc.DefineAttr("spaceKind", "Persistent")
-	desc.DefineAttr("skillId", "Persistent")
+	desc.DefineAttr("skillId", "Persistent", "Client")
 }
 
 // OnCreated 在Player对象创建后被调用
@@ -57,6 +57,10 @@ func (a *Player) setDefaultAttrs() {
 	a.Attrs.SetDefaultListAttr("skillId", skills)
 
 	a.SetClientSyncing(true)
+}
+
+func (a *Player) SetSkillID(eid common.EntityID, skillID uint64) {
+	a.Attrs.GetListAttr("skillId").AppendStr(string(eid))
 }
 
 // GetSpaceID 获得玩家的场景ID并发给调用者
