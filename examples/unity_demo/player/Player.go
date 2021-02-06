@@ -38,8 +38,8 @@ func (a *Player) OnCreated() {
 	a.mgr = new(skill.SkillMgr)
 	a.mgr.Owner = a
 
-	// 技能怎么load
-
+	// 技能load
+	a.mgr.PrintSkills()
 	gwlog.DebugfE("Player OnCreated type[%s]", a.mgr.Owner.(*Player).TypeName)
 }
 
@@ -52,9 +52,11 @@ func (a *Player) setDefaultAttrs() {
 	a.Attrs.SetDefaultInt("hpmax", 100)
 	a.Attrs.SetDefaultStr("action", "idle")
 
-	skills := new(entity.ListAttr)
-	skills.AppendStr("100001")
-	a.Attrs.SetDefaultListAttr("skillId", skills)
+	skills := a.Attrs.GetListAttr("skillId")
+	if skills.Size() == 0 {
+		// add default skill
+		a.mgr.DefaultSkill(a.ID, 100001)
+	}
 
 	a.SetClientSyncing(true)
 }
@@ -202,4 +204,36 @@ func (player *Player) UserSkill_Client() {
 	// targetID := 1001
 	// targetID不存在就是直接空放
 
+}
+
+func (player *Player) LearnSkill_Client(params []byte) {
+	learnSkill := proto.LearnSkillReq{}
+	err := pproto.Unmarshal(params, &learnSkill)
+	if err != nil {
+		resp := proto.LearnSkillResp{}
+		resp.SkillID = learnSkill.SkillID
+		resp.Result = -1
+		ret, _ := pproto.Marshal(&resp)
+		player.CallClient("LearnSkill", ret)
+		return
+	}
+
+	player.mgr.LearnSkill(player.ID, learnSkill.GetSkillID())
+}
+
+func (player *Player) LearnSkillResult(skillID uint32, result int32) {
+	// success
+	if result == 0 {
+		skillsAttr := new(entity.MapAttr)
+		skillsAttr.SetStr("entityID", player.ID.ToString())
+		skillsAttr.SetInt("skillBaseID", int64(skillID))
+
+		player.Attrs.GetListAttr("skillId").AppendMapAttr(skillsAttr)
+	}
+
+	resp := proto.LearnSkillResp{}
+	resp.SkillID = skillID
+	resp.Result = result
+	ret, _ := pproto.Marshal(&resp)
+	player.CallClient("LearnSkill", ret)
 }

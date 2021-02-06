@@ -143,6 +143,155 @@ func (x *RegisterAccountReq) GetPassword() string {
 	return ""
 }
 
+type UseSkillReq struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	SkillID uint32 `protobuf:"varint,1,opt,name=SkillID,proto3" json:"SkillID,omitempty"`
+}
+
+func (x *UseSkillReq) Reset() {
+	*x = UseSkillReq{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_person_proto_msgTypes[2]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *UseSkillReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UseSkillReq) ProtoMessage() {}
+
+func (x *UseSkillReq) ProtoReflect() protoreflect.Message {
+	mi := &file_person_proto_msgTypes[2]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UseSkillReq.ProtoReflect.Descriptor instead.
+func (*UseSkillReq) Descriptor() ([]byte, []int) {
+	return file_person_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *UseSkillReq) GetSkillID() uint32 {
+	if x != nil {
+		return x.SkillID
+	}
+	return 0
+}
+
+type LearnSkillReq struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	SkillID uint32 `protobuf:"varint,1,opt,name=SkillID,proto3" json:"SkillID,omitempty"`
+}
+
+func (x *LearnSkillReq) Reset() {
+	*x = LearnSkillReq{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_person_proto_msgTypes[3]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *LearnSkillReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*LearnSkillReq) ProtoMessage() {}
+
+func (x *LearnSkillReq) ProtoReflect() protoreflect.Message {
+	mi := &file_person_proto_msgTypes[3]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use LearnSkillReq.ProtoReflect.Descriptor instead.
+func (*LearnSkillReq) Descriptor() ([]byte, []int) {
+	return file_person_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *LearnSkillReq) GetSkillID() uint32 {
+	if x != nil {
+		return x.SkillID
+	}
+	return 0
+}
+
+type LearnSkillResp struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	SkillID uint32 `protobuf:"varint,1,opt,name=SkillID,proto3" json:"SkillID,omitempty"`
+	Result  int32  `protobuf:"varint,2,opt,name=Result,proto3" json:"Result,omitempty"`
+}
+
+func (x *LearnSkillResp) Reset() {
+	*x = LearnSkillResp{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_person_proto_msgTypes[4]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *LearnSkillResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*LearnSkillResp) ProtoMessage() {}
+
+func (x *LearnSkillResp) ProtoReflect() protoreflect.Message {
+	mi := &file_person_proto_msgTypes[4]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use LearnSkillResp.ProtoReflect.Descriptor instead.
+func (*LearnSkillResp) Descriptor() ([]byte, []int) {
+	return file_person_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *LearnSkillResp) GetSkillID() uint32 {
+	if x != nil {
+		return x.SkillID
+	}
+	return 0
+}
+
+func (x *LearnSkillResp) GetResult() int32 {
+	if x != nil {
+		return x.Result
+	}
+	return 0
+}
+
 var File_person_proto protoreflect.FileDescriptor
 
 var file_person_proto_rawDesc = []byte{
@@ -156,8 +305,17 @@ var file_person_proto_rawDesc = []byte{
 	0x4e, 0x61, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x55, 0x73, 0x65, 0x72,
 	0x4e, 0x61, 0x6d, 0x65, 0x12, 0x1a, 0x0a, 0x08, 0x50, 0x61, 0x73, 0x73, 0x77, 0x6f, 0x72, 0x64,
 	0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x50, 0x61, 0x73, 0x73, 0x77, 0x6f, 0x72, 0x64,
-	0x42, 0x07, 0x5a, 0x05, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f,
-	0x33,
+	0x22, 0x27, 0x0a, 0x0b, 0x55, 0x73, 0x65, 0x53, 0x6b, 0x69, 0x6c, 0x6c, 0x52, 0x65, 0x71, 0x12,
+	0x18, 0x0a, 0x07, 0x53, 0x6b, 0x69, 0x6c, 0x6c, 0x49, 0x44, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0d,
+	0x52, 0x07, 0x53, 0x6b, 0x69, 0x6c, 0x6c, 0x49, 0x44, 0x22, 0x29, 0x0a, 0x0d, 0x4c, 0x65, 0x61,
+	0x72, 0x6e, 0x53, 0x6b, 0x69, 0x6c, 0x6c, 0x52, 0x65, 0x71, 0x12, 0x18, 0x0a, 0x07, 0x53, 0x6b,
+	0x69, 0x6c, 0x6c, 0x49, 0x44, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0d, 0x52, 0x07, 0x53, 0x6b, 0x69,
+	0x6c, 0x6c, 0x49, 0x44, 0x22, 0x42, 0x0a, 0x0e, 0x4c, 0x65, 0x61, 0x72, 0x6e, 0x53, 0x6b, 0x69,
+	0x6c, 0x6c, 0x52, 0x65, 0x73, 0x70, 0x12, 0x18, 0x0a, 0x07, 0x53, 0x6b, 0x69, 0x6c, 0x6c, 0x49,
+	0x44, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0d, 0x52, 0x07, 0x53, 0x6b, 0x69, 0x6c, 0x6c, 0x49, 0x44,
+	0x12, 0x16, 0x0a, 0x06, 0x52, 0x65, 0x73, 0x75, 0x6c, 0x74, 0x18, 0x02, 0x20, 0x01, 0x28, 0x05,
+	0x52, 0x06, 0x52, 0x65, 0x73, 0x75, 0x6c, 0x74, 0x42, 0x09, 0x5a, 0x07, 0x2e, 0x3b, 0x70, 0x72,
+	0x6f, 0x74, 0x6f, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -172,10 +330,13 @@ func file_person_proto_rawDescGZIP() []byte {
 	return file_person_proto_rawDescData
 }
 
-var file_person_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_person_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
 var file_person_proto_goTypes = []interface{}{
 	(*Person)(nil),             // 0: Person
 	(*RegisterAccountReq)(nil), // 1: RegisterAccountReq
+	(*UseSkillReq)(nil),        // 2: UseSkillReq
+	(*LearnSkillReq)(nil),      // 3: LearnSkillReq
+	(*LearnSkillResp)(nil),     // 4: LearnSkillResp
 }
 var file_person_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type
@@ -215,6 +376,42 @@ func file_person_proto_init() {
 				return nil
 			}
 		}
+		file_person_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*UseSkillReq); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_person_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*LearnSkillReq); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_person_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*LearnSkillResp); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -222,7 +419,7 @@ func file_person_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_person_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   2,
+			NumMessages:   5,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

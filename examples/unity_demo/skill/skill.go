@@ -12,9 +12,11 @@ type Skill struct {
 }
 
 func (skill *Skill) DescribeEntityType(desc *entity.EntityTypeDesc) {
+	desc.SetPersistent(true)
 	desc.DefineAttr("name", "Client")
 	desc.DefineAttr("lv", "Client", "persistent")
 	desc.DefineAttr(common.BaseID, "Client", "persistent")
+	desc.DefineAttr("cooldown", "Client", "persistent")
 }
 
 func (skill *Skill) OnCreated() {
@@ -28,12 +30,13 @@ func (skill *Skill) SetBaseID() {
 
 }
 
-func (skill *Skill) GetBaseID() int64 {
-	return skill.GetInt(common.BaseID)
+func (skill *Skill) GetBaseID() uint32 {
+	return uint32(skill.GetInt(common.BaseID))
 }
 
 func (skill *Skill) setDefaultAttrs() {
 	skill.Attrs.SetDefaultInt("lv", 1)
+	skill.Attrs.SetDefaultInt("cooldown", 0)
 }
 
 func (skill *Skill) Upgrade() bool {
@@ -45,6 +48,8 @@ func (skill *Skill) Upgrade() bool {
 	// is max level
 	skill.Attrs.SetInt("lv", skill.Attrs.GetInt("lv")+1)
 
+	// 技能会不会影响属性
+
 	// save
 	// skill.Save()
 	return true
@@ -52,4 +57,9 @@ func (skill *Skill) Upgrade() bool {
 
 func (skill *Skill) Save() {
 	skill.Entity.Save()
+}
+
+func (skill *Skill) PrintSkill() {
+	gwlog.DebugfE("skillID[%d] skillLv[%d] cd[%d]", skill.Attrs.GetInt(common.BaseID), skill.Attrs.GetInt("lv"),
+		skill.Attrs.GetInt("colldown"))
 }

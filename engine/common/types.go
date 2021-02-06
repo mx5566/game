@@ -16,6 +16,11 @@ func (id EntityID) IsNil() bool {
 	return id == ""
 }
 
+// tostring
+func (id EntityID) ToString() string {
+	return string(id)
+}
+
 // GenEntityID generates a new EntityID
 func GenEntityID() EntityID {
 	return EntityID(uuid.GenUUID())

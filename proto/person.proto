@@ -1,5 +1,5 @@
 syntax = "proto3";
-option go_package='proto';
+option go_package='.;proto';
 
 message Person {
     string Name = 1;
@@ -14,4 +14,13 @@ message RegisterAccountReq {
 
 message UseSkillReq {
     uint32 SkillID = 1;
+}
+
+message LearnSkillReq {
+    uint32 SkillID = 1;
+}
+
+message LearnSkillResp {
+    uint32 SkillID = 1;
+    int32 Result = 2;
 }
