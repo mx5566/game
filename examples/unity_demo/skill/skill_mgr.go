@@ -4,6 +4,8 @@ import (
 	"github.com/xiaonanln/goworld"
 	"github.com/xiaonanln/goworld/engine/common"
 	"github.com/xiaonanln/goworld/examples/unity_demo/inter"
+	"github.com/xiaonanln/goworld/excelt"
+	"github.com/xiaonanln/goworld/tools/rjson"
 )
 
 //
@@ -35,7 +37,13 @@ func (this *SkillMgr) DefaultSkill(playerID common.EntityID, skillBaseID uint32)
 	skill.Call(playerID, "LearnSkillResult", skillBaseID, 0)
 }
 
-func (this *SkillMgr) UseSkill(skillID uint64, targetID common.EntityID) {
+func (this *SkillMgr) UseSkill(playerID common.EntityID, skillBaseID uint32, targetID common.EntityID) {
+	skill, ok := this.Skills[skillBaseID]
+	if !ok {
+		// 使用技能失败
+		skill.Call(playerID, "UseSkillResult", skillBaseID, -1)
+		return
+	}
 
 }
 
@@ -43,6 +51,13 @@ func (this *SkillMgr) LearnSkill(playerID common.EntityID, skillBaseID uint32) {
 	skill, ok := this.Skills[skillBaseID]
 	if ok {
 		skill.Call(playerID, "LearnSkillResult", skillBaseID, -1)
+		return
+	}
+
+	// 查表去获取表数据
+	skillBase := rjson.GetBase(excelt.SkillTableStr, skillBaseID)
+	// 没有找到对应的怪物ID
+	if skillBase == nil {
 		return
 	}
 

@@ -246,6 +246,7 @@ func ListFileFunc(p []string) {
 var MapItemsBase map[interface{}]ItemBase
 var MapNpcBase map[interface{}]NpcBase
 var MapEquipsBase map[interface{}]EquipBase
+var MapSkillBase map[interface{}]SkillBase
 
 type ItemBase struct {
 	ID       int64    `json:"ID"`
@@ -271,6 +272,14 @@ type NpcBase struct {
 type EquipBase struct {
 	ItemBase
 	// external attr
+}
+
+type SkillBase struct {
+	ID         int64  `json:"ID"`
+	Name       string `json:"Name"`
+	Level      uint16 `json:"Level"`
+	Type       uint16 `json:"Type"`       // 那种技能
+	AttackType uint16 `json:"AttackType"` // 点类型 矩形类型 扇形类型  圆类型
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -335,6 +344,10 @@ func GetBase(name string, keys ...interface{}) interface{} {
 			return &base
 		}
 	case NpcTableStr:
+		if base, ok := MapNpcBase[keyCom]; ok {
+			return &base
+		}
+	case SkillTableStr:
 		if base, ok := MapNpcBase[keyCom]; ok {
 			return &base
 		}
